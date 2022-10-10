@@ -28,4 +28,4 @@ RUN yarn install --production
 ENV NODE_ENV=production
 CMD ["node", "server/index.js"]
 
-EXPOSE 3000
+EXPOSE 5489

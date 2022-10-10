@@ -8,4 +8,4 @@ services:
     volumes:
       - "./:/home/node/code"
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:5489:5489"

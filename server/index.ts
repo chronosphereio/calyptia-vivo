@@ -10,7 +10,7 @@ import flbManager from './flb_manager'
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
-const port = 3000
+const port = 5489;
 const nextApp = next({ dev, hostname, port })
 const nextHandle = nextApp.getRequestHandler()
 

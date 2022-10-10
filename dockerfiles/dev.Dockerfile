@@ -11,4 +11,4 @@ WORKDIR /home/node/code
 
 CMD ["start.sh"]
 
-EXPOSE 3000
+EXPOSE 5489
