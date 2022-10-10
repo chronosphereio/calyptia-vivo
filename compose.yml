@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  app:
+    image: flb-data-visualizer-dev
+    build:
+      context: .
+      dockerfile: dockerfiles/dev.Dockerfile
+    volumes:
+      - "./:/home/node/code"
+    ports:
+      - "127.0.0.1:3000:3000"
