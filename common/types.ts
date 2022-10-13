@@ -1,3 +1,3 @@
 export interface FluentBitOpts {
-  datasource: 'cpu' | 'dummy' | 'http'
+  datasource: 'cpu' | 'dummy' | 'http' | 'forward'
 }

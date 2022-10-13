@@ -11,6 +11,11 @@ function exampleCurlCommand(token: string) {
   return `curl -H 'Content-Type: application/json' -d '{"hello":"world!"}' ${window.location.href}flb/${token}`
 }
 
+function exampleFluentbitForwardCommand() {
+  const host = window.location.hostname;
+  return `fluent-bit -i cpu -o forward -phost=${host}`
+}
+
 function exampleFluentbitCommand(token: string) {
   const host = window.location.hostname;
   const port = window.location.port;
@@ -24,7 +29,7 @@ const Home: NextPage = () => {
   const [token, setToken] = useState('')
 
   function changeDatasource(newValue: string) {
-    if (newValue !== 'cpu' && newValue !== 'dummy' && newValue !== 'http') {
+    if (newValue !== 'cpu' && newValue !== 'dummy' && newValue !== 'http' && newValue !== 'forward') {
       console.warn('invalid datasource', newValue)
       return;
     }
@@ -54,6 +59,7 @@ const Home: NextPage = () => {
             <option value="cpu">CPU</option>
             <option value="dummy">Dummy</option>
             <option value="http">HTTP</option>
+            <option value="forward">Forward</option>
           </select>
         </div>
         {datasource === 'http' ? (
@@ -61,6 +67,11 @@ const Home: NextPage = () => {
           <div>Token: <pre>{token}</pre></div>
           <div>Example CURL command: <pre>{exampleCurlCommand(token)}</pre></div>
           <div>Example FluentBit command: <pre>{exampleFluentbitCommand(token)}</pre></div>
+        </div>
+        ) : <></>}
+        {datasource === 'forward' ? (
+        <div className="samples">
+          <div>Example FluentBit command: <pre>{exampleFluentbitForwardCommand()}</pre></div>
         </div>
         ) : <></>}
         </div>

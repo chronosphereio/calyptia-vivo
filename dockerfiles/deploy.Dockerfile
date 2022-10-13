@@ -29,3 +29,4 @@ ENV NODE_ENV=production
 CMD ["node", "server/index.js"]
 
 EXPOSE 5489
+EXPOSE 24224

@@ -12,3 +12,4 @@ WORKDIR /home/node/code
 CMD ["start.sh"]
 
 EXPOSE 5489
+EXPOSE 24224
