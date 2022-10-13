@@ -1,6 +1,7 @@
 import assert from 'assert'
 import cp from 'child_process'
 import crypto from 'crypto'
+import split2 from 'split2'
 
 import { WebSocket } from 'ws'
 import { FluentBitOpts } from '../common/types'
@@ -53,12 +54,10 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
     }
   }
 
-  flb.stdout.on('data', (data) => {
-    try {
-      broadcast({event: 'stdout', records: JSON.parse(data)})
-    } catch (err: any) {
-      broadcast({event: 'stdout', error: err.stack || err.message, raw: data})
-    }
+  flb.stdout.pipe(split2(JSON.parse)).on('data', (records: any) => {
+    broadcast({event: 'stdout', records})
+  }).on('error', (err: Error) => {
+    broadcast({event: 'stdout', error: err.stack || err.message})
   })
 
   flb.stderr.on('data', (data) => {
