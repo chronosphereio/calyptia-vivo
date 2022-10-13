@@ -10,5 +10,5 @@ docker compose up
 
 ```bash
 docker build -t vivo -f dockerfiles/deploy.Dockerfile .
-docker run -ti --rm --name=vivo -p5489:5489 vivo
+docker run -ti --rm --name=vivo -p5489:5489 -p24224:24224 vivo
 ```
