@@ -15,7 +15,7 @@ const nextApp = next({ dev, hostname, port })
 const nextHandle = nextApp.getRequestHandler()
 
 const app = express()
-.use(bodyParser.json())
+.use(bodyParser.json({limit: 1024 * 1024 * 10}))
 
 
 app.get('/api/hello', (_req, res) => {
