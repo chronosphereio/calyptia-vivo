@@ -4,7 +4,8 @@ services:
     image: flb-data-visualizer-dev
     build:
       context: .
-      dockerfile: dockerfiles/dev.Dockerfile
+      dockerfile: Dockerfile
+      target: dev
     volumes:
       - "./:/home/node/code"
     ports:
