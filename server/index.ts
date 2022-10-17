@@ -18,8 +18,10 @@ const app = express()
 .use(bodyParser.json({limit: 1024 * 1024 * 10}))
 
 
-app.get('/api/hello', (_req, res) => {
-  res.status(200).json({ name: 'Overriden' })
+let websocketConnections = 0
+
+app.get('/stats', (_req, res) => {
+  res.status(200).json({ websocketConnections, fluentBitInstances: manager.count() })
 });
 
 app.get('*', (req, res) => {
@@ -40,6 +42,7 @@ const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const manager = flbManager()
 
 wss.on('connection', (ws) => {
+  websocketConnections++;
   const userId = 'stubUser'
 
   ws.once('message', (msg) => {
@@ -49,6 +52,7 @@ wss.on('connection', (ws) => {
       ws.send(JSON.stringify({ token }));
 
       ws.on('close', function () {
+        websocketConnections--;
         manager.disconnect(userId, ws);
       });
     } catch (err) {

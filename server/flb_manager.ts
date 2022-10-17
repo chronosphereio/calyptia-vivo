@@ -13,6 +13,7 @@ interface FlbManager {
   write: (instanceId: string, data: string) => void;
   disconnect: (userId: string, socket: WebSocket) => void
   disconnectAll: () => void
+  count: () => number
 }
 
 interface FlbInstance {
@@ -174,6 +175,10 @@ export default function flbManager(): FlbManager {
         instance.disconnectAll();
         instances.delete(userId);
       }
+    },
+
+    count() {
+      return instances.size
     }
   }
 }
