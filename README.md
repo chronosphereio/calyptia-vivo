@@ -8,7 +8,17 @@ docker compose up
 
 ## Production
 
+### Run latest build
+
+```bash
+docker run -ti --rm --name=vivo -p5489:5489 -p24224:24224 ghcr.io/calyptia/vivo
+```
+
+### Build locally
+
 ```bash
 docker build -t vivo -f dockerfiles/deploy.Dockerfile .
 docker run -ti --rm --name=vivo -p5489:5489 -p24224:24224 vivo
 ```
+
+
