@@ -40,11 +40,11 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository }}
-          # Ensure we strip any 'v' prefix and do not add a latest
-          flavor: |
-            latest=false
+          # Ensure we strip any 'v' prefix, provide a SHA and a latest tag only for default branch (master)
           tags: |
             type=semver,pattern={{version}},event=tag
+            type=sha,prefix=,suffix=,format=short
+            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
             # defaults for others
             type=schedule
             type=ref,event=branch
