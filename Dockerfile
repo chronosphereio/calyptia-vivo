@@ -43,4 +43,5 @@ WORKDIR /home/node/code
 EXPOSE 5489
 EXPOSE 24224
 
-CMD ["/usr/local/bin/start.sh"]
+# Supports passing parameters
+ENTRYPOINT [ "/usr/local/bin/start.sh"]
