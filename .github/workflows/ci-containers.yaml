@@ -17,11 +17,12 @@ jobs:
     permissions:
       contents: read
       packages: write
-    name: Build multi-arch container images
+    name: Build container images
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -69,11 +70,61 @@ jobs:
           load: false
           target: dev
 
+  test-container-images:
+    name: Test container images
+    needs:
+      - build-container-images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
+        with:
+          cluster_name: kind
+
+      - name: Apply local service
+        run: |
+          kubectl apply -f ./vivo-k8s.yaml
+        shell: bash
+
+      - name: Check it is running ok
+        timeout-minutes: 5
+        run: |
+          echo "Waiting for deployment to complete..."
+          until kubectl rollout status deployment calyptia-vivo; do
+            echo -n "."
+            sleep 2
+          done
+          echo
+          echo "Deployment completed successfully"
+        shell: bash
+
+      - name: Debug on failure
+        continue-on-error: true
+        if: failure()
+        run: |
+          kubectl cluster-info || true
+          kubectl get all || true
+          kubectl get events || true
+        shell: bash
+
+      - name: Dump docker logs on failure
+        continue-on-error: true
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          images: 'vivo'
+
   release-on-tag:
     if: startsWith(github.ref, 'refs/tags/')
     name: Create release
     needs:
       - build-container-images
+      - test-container-images
     runs-on: ubuntu-latest
     permissions:
       contents: write
