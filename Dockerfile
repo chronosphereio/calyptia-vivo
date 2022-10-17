@@ -29,7 +29,7 @@ ENV NODE_ENV=production
 EXPOSE 5489
 EXPOSE 24224
 
-CMD ["node", "server/index.js"]
+CMD [ "node", "server/index.js" ]
 
 # dev target handles working with local files for development
 FROM node:18 as dev
@@ -44,4 +44,4 @@ EXPOSE 5489
 EXPOSE 24224
 
 # Supports passing parameters
-ENTRYPOINT [ "/usr/local/bin/start.sh"]
+ENTRYPOINT [ "/usr/local/bin/start.sh" ]

@@ -13,3 +13,10 @@ updates:
         interval: "weekly"
     commit-message:
       prefix: "dockerfile: "
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+        interval: "weekly"
+    commit-message:
+      prefix: "node: "
