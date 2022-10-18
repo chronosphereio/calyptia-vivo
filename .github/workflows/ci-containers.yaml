@@ -14,6 +14,8 @@ on:
 
 jobs:
   build-container-images:
+    outputs:
+      digest: ${{ steps.docker_build.outputs.digest }}
     permissions:
       contents: read
       packages: write
@@ -87,8 +89,10 @@ jobs:
           cluster_name: kind
           config: ./kind/config.yaml
 
-      - name: Apply local service
+      - name: Apply local service using image from this run
         run: |
+          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-k8s.yaml
+          cat ./vivo-k8s.yaml
           kubectl apply -f ./vivo-k8s.yaml
         shell: bash
 
@@ -108,7 +112,7 @@ jobs:
         timeout-minutes: 5
         run: |
           ./kind/setup-ingress.sh
-          curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/flb/123456789
+          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/flb/123456789
         shell: bash
 
       - name: Debug on failure
