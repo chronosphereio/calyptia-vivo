@@ -13,4 +13,7 @@ kubectl wait --namespace ingress-nginx \
 
 echo "Setting up Vivo ingress"
 kubectl apply -f "$SCRIPT_DIR"/ingress.yaml
+until curl --fail http://localhost &> /dev/null; do 
+    sleep 2
+done
 echo "Ingress setup complete"
