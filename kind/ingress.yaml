@@ -8,16 +8,10 @@ spec:
   - http:
       paths:
       - pathType: Prefix
-        path: "/vivo"
+        # The server makes a lot of assumptions about root URL so does not handle a prefix path well
+        path: "/"
         backend:
           service:
             name: calyptia-vivo
             port:
               number: 5489
-      - pathType: Prefix
-        path: "/forward"
-        backend:
-          service:
-            name: calyptia-vivo
-            port:
-              number: 24224

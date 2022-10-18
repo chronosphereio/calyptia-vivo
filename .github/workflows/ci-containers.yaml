@@ -108,7 +108,7 @@ jobs:
         timeout-minutes: 5
         run: |
           ./kind/setup-ingress.sh
-          curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/vivo/flb/123456789
+          curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/flb/123456789
         shell: bash
 
       - name: Debug on failure
@@ -125,7 +125,7 @@ jobs:
         if: failure()
         uses: jwalton/gh-docker-logs@v2
         with:
-          images: 'vivo'
+          images: 'vivo,nginx'
 
   release-on-tag:
     if: startsWith(github.ref, 'refs/tags/')
