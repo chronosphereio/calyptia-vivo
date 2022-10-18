@@ -51,6 +51,10 @@ spec:
             failureThreshold: 3
             initialDelaySeconds: 10
             periodSeconds: 5
+          env:
+            # For production deployments this should be linked to secrets management
+            - name: VIVO_TOKEN
+              value: '123456789'
           # We really should provide resource limits
           resources: {}
       restartPolicy: Always

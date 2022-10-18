@@ -25,7 +25,12 @@ interface FlbInstance {
   datasource: () => string;
 }
 
-function generateToken() {
+function getToken() {
+  if ( process.env.VIVO_TOKEN ) {
+    console.log("Using VIVO_TOKEN variable for token.")
+    return process.env.VIVO_TOKEN
+  }
+  console.log("Generating token as no VIVO_TOKEN variable found.")
   return crypto.randomBytes(32).toString('hex')
 };
 
@@ -139,7 +144,7 @@ export default function flbManager(): FlbManager {
 
       let token = userToToken.get(userId)
       if (!token) {
-        token = generateToken();
+        token = getToken();
         userToToken.set(userId, token);
         tokenToUser.set(token, userId);
       }

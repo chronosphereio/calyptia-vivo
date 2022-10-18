@@ -14,6 +14,8 @@ on:
 
 jobs:
   build-container-images:
+    outputs:
+      digest: ${{ steps.docker_build.outputs.digest }}
     permissions:
       contents: read
       packages: write
@@ -52,6 +54,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build the standard production image
+        id: docker_build
         uses: docker/build-push-action@v3
         with:
           tags: ${{ steps.meta.outputs.tags }}
@@ -85,9 +88,12 @@ jobs:
         uses: helm/kind-action@v1.4.0
         with:
           cluster_name: kind
+          config: ./kind/config.yaml
 
-      - name: Apply local service
+      - name: Apply local service using image from this run
         run: |
+          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-k8s.yaml
+          cat ./vivo-k8s.yaml
           kubectl apply -f ./vivo-k8s.yaml
         shell: bash
 
@@ -103,6 +109,16 @@ jobs:
           echo "Deployment completed successfully"
         shell: bash
 
+      # TODO: The UI needs to be run in order to receive data via curl
+      # - name: Inject HTTP traffic
+      #   timeout-minutes: 2
+      #   run: |
+      #     kubectl port-forward --address=127.0.0.1 svc/calyptia-vivo 35555:5489 &
+      #     sleep 5
+      #     TOKEN=$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..spec.containers..env..value})
+      #     curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:35555/flb/$TOKEN"'
+      #   shell: bash
+
       - name: Debug on failure
         continue-on-error: true
         if: failure()
@@ -110,6 +126,11 @@ jobs:
           kubectl cluster-info || true
           kubectl get all || true
           kubectl get events || true
+          kubectl get pods --all-namespaces -o wide --show-labels || true
+          kubectl logs "$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name})" || true
+          wget https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
+          /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace default || true
+          /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace kube-system || true
         shell: bash
 
       - name: Dump docker logs on failure
@@ -117,7 +138,7 @@ jobs:
         if: failure()
         uses: jwalton/gh-docker-logs@v2
         with:
-          images: 'vivo'
+          images: 'vivo,nginx'
 
   release-on-tag:
     if: startsWith(github.ref, 'refs/tags/')
