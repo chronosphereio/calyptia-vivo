@@ -54,6 +54,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build the standard production image
+        id: docker_build
         uses: docker/build-push-action@v3
         with:
           tags: ${{ steps.meta.outputs.tags }}
@@ -122,6 +123,7 @@ jobs:
           kubectl cluster-info || true
           kubectl get all || true
           kubectl get events || true
+          kubectl logs $(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name}) || true
         shell: bash
 
       - name: Dump docker logs on failure
