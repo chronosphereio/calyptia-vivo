@@ -124,6 +124,7 @@ jobs:
           kubectl get all || true
           kubectl get events || true
           kubectl logs $(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name}) || true
+          kubectl -n ingress-nginx logs $(kubectl -n ingress-nginx get pod --selector=app.kubernetes.io/instance=ingress-nginx --output=jsonpath={.items..metadata.name}) || true
         shell: bash
 
       - name: Dump docker logs on failure
