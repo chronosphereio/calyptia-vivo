@@ -110,10 +110,14 @@ jobs:
         shell: bash
 
       - name: Inject HTTP traffic
-        timeout-minutes: 5
+        timeout-minutes: 2
         run: |
-          ./kind/setup-ingress.sh
-          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/flb/123456789
+          kubectl port-forward --address=127.0.0.1 svc/calyptia-vivo :5489 > kubectl.out &
+          PF_PID=$!
+          cat kubectl.out
+          LOCAL_PORT=$(sed -n "s/^.*:\(\S*\).*$/\1/p" kubectl.out)
+          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:$LOCAL_PORT/flb/123456789"
+          kill -9 "$PF_PID"
         shell: bash
 
       - name: Debug on failure
@@ -123,8 +127,11 @@ jobs:
           kubectl cluster-info || true
           kubectl get all || true
           kubectl get events || true
-          kubectl logs $(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name}) || true
-          kubectl -n ingress-nginx logs $(kubectl -n ingress-nginx get pod --selector=app.kubernetes.io/instance=ingress-nginx --output=jsonpath={.items..metadata.name}) || true
+          kubectl get pods --all-namespaces -o wide --show-labels || true
+          kubectl logs "$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name})" || true
+          wget https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
+          /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace default || true
+          /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace kube-system || true
         shell: bash
 
       - name: Dump docker logs on failure

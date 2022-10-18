@@ -12,7 +12,7 @@ To deploy in Kubernetes a YAML file is provided locally: [`kubectl apply -f ./vi
 
 This provides a ClusterIP service so can be accessed anywhere in the cluster but external access requires an ingress and/or NodePort/LoadBalancer service.
 
-An example using KIND with Ingress from <http://localhost> is also used in CI:
+An example using KIND with Ingress from <http://localhost> is shown below:
 
 ```shell
 kind create cluster --config=./kind/config.yaml
