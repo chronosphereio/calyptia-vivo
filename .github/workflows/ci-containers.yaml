@@ -114,9 +114,13 @@ jobs:
         run: |
           kubectl port-forward --address=127.0.0.1 svc/calyptia-vivo :5489 > kubectl.out &
           PF_PID=$!
+          sleep 2
           cat kubectl.out
           LOCAL_PORT=$(sed -n "s/^.*:\(\S*\).*$/\1/p" kubectl.out)
-          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:$LOCAL_PORT/flb/123456789"
+          echo "Using local port: $LOCAL_PORT"
+          TOKEN=$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..spec.containers..env..value})
+          echo "Using token: $TOKEN"
+          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:$LOCAL_PORT/flb/$TOKEN"
           kill -9 "$PF_PID"
         shell: bash
 
