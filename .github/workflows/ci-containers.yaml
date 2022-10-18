@@ -85,6 +85,7 @@ jobs:
         uses: helm/kind-action@v1.4.0
         with:
           cluster_name: kind
+          config: ./kind/config.yaml
 
       - name: Apply local service
         run: |
@@ -101,6 +102,13 @@ jobs:
           done
           echo
           echo "Deployment completed successfully"
+        shell: bash
+
+      - name: Inject HTTP traffic
+        timeout-minutes: 5
+        run: |
+          ./kind/setup-ingress.sh
+          curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' http://localhost/vivo/flb/123456789
         shell: bash
 
       - name: Debug on failure
