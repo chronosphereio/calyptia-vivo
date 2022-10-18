@@ -26,7 +26,7 @@ interface FlbInstance {
 }
 
 function getToken() {
-  if ( 'VIVO_TOKEN' in process.env ) {
+  if ( process.env.VIVO_TOKEN ) {
     console.log("Using VIVO_TOKEN variable for token.")
     return process.env.VIVO_TOKEN
   }
