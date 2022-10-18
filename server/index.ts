@@ -5,8 +5,15 @@ import bodyParser from 'express';
 /* import session from 'express-session'; */
 import next from 'next'
 import { WebSocketServer } from 'ws';
+import { program } from 'commander';
 
 import flbManager from './flb_manager'
+
+program
+.option('--single-user');
+
+program.parse();
+const opts = program.opts();
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
@@ -58,9 +65,27 @@ app.post('/flb/:token', async (req, res) => {
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const manager = flbManager()
 
+const userId = 'stubUser';
+
+if (opts.singleUser) {
+  const consoleToken = manager.connect(userId, {
+    send(json: string) {
+      process.stderr.write("fluent-bit:" + json + "\n", "utf-8");
+    }
+  }, { datasource: 'http' })
+
+  app.post('/console', async (req, res) => {
+    try {
+      manager.write(consoleToken, req.body);
+      res.sendStatus(200).end()
+    } catch (err) {
+      res.sendStatus(404).end();
+    }
+  });
+}
+
 wss.on('connection', (ws) => {
   websocketConnections++;
-  const userId = 'stubUser'
 
   ws.once('message', (msg) => {
     try {
@@ -76,9 +101,7 @@ wss.on('connection', (ws) => {
       ws.close();
     }
   })
-
 })
-
 
 const server = http.createServer(app);
 server.on('upgrade', function (request: any, socket, head) {

@@ -3,22 +3,25 @@ import cp from 'child_process'
 import crypto from 'crypto'
 import split2 from 'split2'
 
-import { WebSocket } from 'ws'
 import { FluentBitOpts } from '../common/types'
 
 const FLUENT_BIT_EXEC_PATH = process.env.FLUENT_BIT_EXEC_PATH || '/fluent-bit/bin/fluent-bit';
 
+export interface Socket {
+  send: (json: string) => void;
+}
+
 interface FlbManager {
-  connect: (userId: string, datasocket: WebSocket, opts: FluentBitOpts) => string
+  connect: (userId: string, datasocket: Socket, opts: FluentBitOpts) => string
   write: (instanceId: string, data: string) => void;
-  disconnect: (userId: string, socket: WebSocket) => void
+  disconnect: (userId: string, socket: Socket) => void
   disconnectAll: () => void
   count: () => number
 }
 
 interface FlbInstance {
-  connect: (socket: WebSocket) => void;
-  disconnect: (socket: WebSocket) => void;
+  connect: (socket: Socket) => void;
+  disconnect: (socket: Socket) => void;
   write: (data: string) => void;
   disconnectAll: () => void;
   connectedCount: () => number;
@@ -35,7 +38,7 @@ function getToken() {
 };
 
 function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
-  const sockets = new Set<WebSocket>()
+  const sockets = new Set<Socket>()
 
   const ds = datasource === 'http' ? 'stdin' : datasource
 
@@ -54,9 +57,7 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
     }
     const json = JSON.stringify(payload)
     for (const socket of sockets) {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(json)
-      }
+      socket.send(json)
     }
   }
 
