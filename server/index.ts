@@ -17,6 +17,23 @@ const nextHandle = nextApp.getRequestHandler()
 const app = express()
 .use(bodyParser.json({limit: 1024 * 1024 * 10}))
 
+let healthy = false
+
+app.get('/healthz', (_req, res) => {
+  if (healthy) {
+    res.status(200).json({
+      uptime: process.uptime(),
+      message: 'OK',
+      timestamp: Date.now()
+    })
+  } else {
+    res.status(503).json({
+      uptime: process.uptime(),
+      message: 'NOK',
+      timestamp: Date.now()
+    })
+  }
+});
 
 let websocketConnections = 0
 
@@ -78,10 +95,12 @@ async function start() {
   server.listen(port, (err?: Error) =>{
     if (err) throw err
     console.log(`> Ready on http://${hostname}:${port}`)
+    healthy = true
   })
 }
 
 start().catch(err => {
+  healthy = false
   console.error(err)
   process.exit(1)
 })

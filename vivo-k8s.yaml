@@ -40,7 +40,17 @@ spec:
         - image: ghcr.io/calyptia/vivo
           name: vivo
           ports:
-            - containerPort: 5489
-            - containerPort: 24224
+            - name: http-port
+              containerPort: 5489
+            - name: forward-port
+              containerPort: 24224
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http-port
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # We really should provide resource limits
           resources: {}
       restartPolicy: Always
