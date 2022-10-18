@@ -109,20 +109,15 @@ jobs:
           echo "Deployment completed successfully"
         shell: bash
 
-      - name: Inject HTTP traffic
-        timeout-minutes: 2
-        run: |
-          kubectl port-forward --address=127.0.0.1 svc/calyptia-vivo :5489 > kubectl.out &
-          PF_PID=$!
-          sleep 2
-          cat kubectl.out
-          LOCAL_PORT=$(sed -n "s/^.*:\(\S*\).*$/\1/p" kubectl.out)
-          echo "Using local port: $LOCAL_PORT"
-          TOKEN=$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..spec.containers..env..value})
-          echo "Using token: $TOKEN"
-          curl --verbose --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:$LOCAL_PORT/flb/$TOKEN"
-          kill -9 "$PF_PID"
-        shell: bash
+      # TODO: The UI needs to be run in order to receive data via curl
+      # - name: Inject HTTP traffic
+      #   timeout-minutes: 2
+      #   run: |
+      #     kubectl port-forward --address=127.0.0.1 svc/calyptia-vivo 35555:5489 &
+      #     sleep 5
+      #     TOKEN=$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..spec.containers..env..value})
+      #     curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:35555/flb/$TOKEN"'
+      #   shell: bash
 
       - name: Debug on failure
         continue-on-error: true

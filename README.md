@@ -22,6 +22,8 @@ kubectl apply -f ./vivo-k8s.yaml
 
 This uses the set up as described in the KIND documentation just to forward all traffic to the HTTP service for Vivo: <https://kind.sigs.k8s.io/docs/user/ingress/>.
 
+**NOTE: Vivo requires the UI to be open (or a websocket connection at least) before it can handle traffic.**
+
 ### Run latest build
 
 ```bash
