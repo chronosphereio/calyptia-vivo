@@ -29,7 +29,8 @@ ENV NODE_ENV=production
 EXPOSE 5489
 EXPOSE 24224
 
-CMD [ "node", "server/index.js" ]
+# Default to single user mode to simplify deployment
+CMD [ "node", "server/index.js", "--single-user" ]
 
 # dev target handles working with local files for development
 FROM node:18 as dev
