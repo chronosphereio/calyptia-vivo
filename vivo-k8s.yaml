@@ -6,11 +6,12 @@ metadata:
     app.kubernetes.io/instance: calyptia
   name: calyptia-vivo
 spec:
+  type: NodePort
   ports:
-    - name: "5489"
+    - name: http
       port: 5489
       targetPort: 5489
-    - name: "24224"
+    - name: forward
       port: 24224
       targetPort: 24224
   selector:
