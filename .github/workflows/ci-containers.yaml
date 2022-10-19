@@ -92,9 +92,9 @@ jobs:
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-k8s.yaml
-          cat ./vivo-k8s.yaml
-          kubectl apply -f ./vivo-k8s.yaml
+          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-dev.yaml
+          cat ./vivo-dev.yaml
+          kubectl apply -f ./vivo-dev.yaml
         shell: bash
 
       - name: Check it is running ok

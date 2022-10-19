@@ -39,6 +39,7 @@ spec:
     spec:
       containers:
         - image: calyptia/vivo
+          imagePullPolicy: Always
           name: vivo
           ports:
             - name: http-port
