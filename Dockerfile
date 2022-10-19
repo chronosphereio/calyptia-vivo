@@ -10,7 +10,7 @@ USER node
 RUN yarn install && yarn build
 RUN ./node_modules/.bin/tsc --noEmit false --outDir tsbuild
 
-FROM node:18 as prod
+FROM node:18-slim as prod
 
 WORKDIR /app
 
