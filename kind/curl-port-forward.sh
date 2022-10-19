@@ -43,7 +43,7 @@ until curl --fail --silent "http://localhost:$LOCAL_PORT/flb/"; do
 done
 
 echo "Sending command"
-curl "$@" "http://localhost:${LOCAL_PORT}/flb/${TOKEN}"
+curl "$@" "http://localhost:${LOCAL_PORT}/console/${TOKEN}"
 
 # Kill the port-forward now
 kill -9 "$PF_PID"
