@@ -112,8 +112,7 @@ jobs:
       - name: Inject HTTP traffic
         timeout-minutes: 2
         run: |
-          TOKEN=$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..spec.containers..env..value})
-          curl --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}' "http://localhost:35555/flb/$TOKEN"'
+          ./kind/curl-port-forward.sh --fail -H 'Content-Type: application/json' -d '{"hello":"world!"}'
         shell: bash
 
       - name: Debug on failure
