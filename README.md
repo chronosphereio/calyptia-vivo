@@ -1,5 +1,8 @@
 # Fluent-bit data visualizer
 
+Simple web server to display received Fluent Bit messages.
+![Vivo screenshot](./vivo.png)
+
 ## Development
 
 ```bash
@@ -10,7 +13,9 @@ docker compose up
 
 To deploy in Kubernetes a YAML file is provided locally: [`kubectl apply -f ./vivo-k8s.yaml`](./vivo-k8s.yaml).
 
-This provides a ClusterIP service so can be accessed anywhere in the cluster but external access requires an ingress and/or NodePort/LoadBalancer service.
+This provides a NodePort service so can be accessed anywhere in the cluster but external access may require an ingress.
+
+To view the configuration of the service run `kubectl describe svc/calyptia-vivo` which will give you the NodePort value to use for Docker Desktop.
 
 An example using KIND with Ingress from <http://localhost> is shown below:
 
