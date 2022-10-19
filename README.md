@@ -11,7 +11,7 @@ docker compose up
 
 ## Production
 
-To deploy in Kubernetes a YAML file is provided locally: [`kubectl apply -f ./vivo-k8s.yaml`](./vivo-k8s.yaml).
+To deploy in Kubernetes a YAML file is provided locally: [`kubectl apply -f ./vivo-dev.yaml`](./vivo-dev.yaml).
 
 This provides a NodePort service so can be accessed anywhere in the cluster but external access may require an ingress.
 
@@ -21,7 +21,7 @@ An example using KIND with Ingress from <http://localhost> is shown below:
 
 ```shell
 kind create cluster --config=./kind/config.yaml
-kubectl apply -f ./vivo-k8s.yaml
+kubectl apply -f ./vivo-dev.yaml
 ./kind/setup-ingress.sh
 ```
 
