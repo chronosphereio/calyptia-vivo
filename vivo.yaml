@@ -38,7 +38,7 @@ spec:
         app.kubernetes.io/instance: calyptia
     spec:
       containers:
-        - image: calyptia/vivo
+        - image: calyptia/vivo:1.0.1
           imagePullPolicy: Always
           name: vivo
           ports:
