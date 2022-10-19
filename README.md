@@ -1,5 +1,8 @@
 # Fluent-bit data visualizer
 
+Simple web server to display received Fluent Bit messages.
+![Vivo screenshot](./vivo.png)
+
 ## Development
 
 ```bash
