@@ -10,7 +10,9 @@ USER node
 RUN yarn install && yarn build
 RUN ./node_modules/.bin/tsc --noEmit false --outDir tsbuild
 
-FROM node:18-slim as prod
+# TODO: require full node for dependencies
+# https://github.com/calyptia/vivo/issues/23
+FROM node:18 as prod
 
 WORKDIR /app
 
