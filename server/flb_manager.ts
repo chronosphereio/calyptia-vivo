@@ -5,31 +5,31 @@ import split2 from 'split2'
 
 import { FluentBitOpts } from '../common/types'
 
-const FLUENT_BIT_EXEC_PATH = process.env.FLUENT_BIT_EXEC_PATH || '/fluent-bit/bin/fluent-bit';
+const FLUENT_BIT_EXEC_PATH = process.env.FLUENT_BIT_EXEC_PATH || '/fluent-bit/bin/fluent-bit'
 
 export interface Socket {
-  send: (json: string) => void;
+  send: (json: string) => void
 }
 
 interface FlbManager {
   connect: (userId: string, datasocket: Socket, opts: FluentBitOpts) => string
-  write: (instanceId: string, data: string) => void;
+  write: (instanceId: string, data: string) => void
   disconnect: (userId: string, socket: Socket) => void
   disconnectAll: () => void
   count: () => number
 }
 
 interface FlbInstance {
-  connect: (socket: Socket) => void;
-  disconnect: (socket: Socket) => void;
-  write: (data: string) => void;
-  disconnectAll: () => void;
-  connectedCount: () => number;
-  datasource: () => string;
+  connect: (socket: Socket) => void
+  disconnect: (socket: Socket) => void
+  write: (data: string) => void
+  disconnectAll: () => void
+  connectedCount: () => number
+  datasource: () => string
 }
 
 function getToken() {
-  if ( process.env.VIVO_TOKEN ) {
+  if (process.env.VIVO_TOKEN) {
     console.log("Using VIVO_TOKEN variable for token.")
     return process.env.VIVO_TOKEN
   }
@@ -48,8 +48,8 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
     '-p', 'format=json',
     '-f', '0.2'
   ])
-  flb.stdout.setEncoding('utf-8');
-  flb.stderr.setEncoding('utf-8');
+  flb.stdout.setEncoding('utf-8')
+  flb.stderr.setEncoding('utf-8')
 
   function broadcast(payload: any) {
     if (!sockets.size) {
@@ -62,20 +62,20 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
   }
 
   flb.stdout.pipe(split2(JSON.parse)).on('data', (records: any) => {
-    broadcast({event: 'stdout', records})
+    broadcast({ event: 'stdout', records })
   }).on('error', (err: Error) => {
-    broadcast({event: 'stdout', error: err.stack || err.message})
+    broadcast({ event: 'stdout', error: err.stack || err.message })
   })
 
   flb.stderr.on('data', (data) => {
-    broadcast({event: 'stderr', payload: data})
+    broadcast({ event: 'stderr', payload: data })
   })
 
   flb.on('exit', (code, signal) => {
     // This should normally be a no-op happen since we only kill fluent-bit
     // once all sockets are disconnected. The goal here is notify the UI if
     // something goes wrong, like fluent-bit crashes.
-    broadcast({event: 'exit', code, signal})
+    broadcast({ event: 'exit', code, signal })
   })
 
   return {
@@ -112,16 +112,16 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
     },
 
     datasource() {
-      return datasource;
+      return datasource
     }
   }
 }
 
-let singleton: FlbManager;
+let singleton: FlbManager
 
 export default function flbManager(): FlbManager {
   if (singleton) {
-    return singleton;
+    return singleton
   }
 
   const instances = new Map<string, FlbInstance>()
@@ -134,8 +134,8 @@ export default function flbManager(): FlbManager {
 
       if (instance && instance.datasource() !== opts.datasource) {
         // changing datasource, restart
-        instance.disconnectAll();
-        instance = undefined;
+        instance.disconnectAll()
+        instance = undefined
       }
 
       if (!instance) {
@@ -145,13 +145,13 @@ export default function flbManager(): FlbManager {
 
       let token = userToToken.get(userId)
       if (!token) {
-        token = getToken();
-        userToToken.set(userId, token);
-        tokenToUser.set(token, userId);
+        token = getToken()
+        userToToken.set(userId, token)
+        tokenToUser.set(token, userId)
       }
 
       instance.connect(socket)
-      return token;
+      return token
     },
 
     write(token, data) {
@@ -161,7 +161,7 @@ export default function flbManager(): FlbManager {
       }
       const instance = instances.get(userId)
       assert(instance)
-      instance.write(data);
+      instance.write(data)
     },
 
     disconnect(userId, socket) {
@@ -178,8 +178,8 @@ export default function flbManager(): FlbManager {
 
     disconnectAll() {
       for (const [userId, instance] of instances.entries()) {
-        instance.disconnectAll();
-        instances.delete(userId);
+        instance.disconnectAll()
+        instances.delete(userId)
       }
     },
 
@@ -202,6 +202,6 @@ process.on('exit', exitHandler.bind(null, false, 0))
 process.on('SIGINT', exitHandler.bind(null, true, 0))
 process.on('SIGTERM', exitHandler.bind(null, true, 0))
 process.on('uncaughtException', (err) => {
-  console.error(err);
-  exitHandler(true, 1);
+  console.error(err)
+  exitHandler(true, 1)
 })
