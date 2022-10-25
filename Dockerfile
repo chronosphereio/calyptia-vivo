@@ -1,6 +1,6 @@
 FROM fluent/fluent-bit:1.9 as flb-downloader
 
-FROM node:18 as builder
+FROM node:19 as builder
 
 WORKDIR /build
 COPY . .
@@ -12,7 +12,7 @@ RUN ./node_modules/.bin/tsc --noEmit false --outDir tsbuild
 
 # TODO: require full node for dependencies
 # https://github.com/calyptia/vivo/issues/23
-FROM node:18 as prod
+FROM node:19 as prod
 
 WORKDIR /app
 
@@ -35,7 +35,7 @@ EXPOSE 24224
 CMD [ "node", "server/index.js", "--single-user" ]
 
 # dev target handles working with local files for development
-FROM node:18 as dev
+FROM node:19 as dev
 
 COPY --from=flb-downloader /fluent-bit /fluent-bit
 COPY ./start.sh /usr/local/bin/start.sh
