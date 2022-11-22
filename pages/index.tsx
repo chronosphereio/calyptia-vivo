@@ -21,8 +21,8 @@ import { flbConnection, FlbConnection } from '../util/flb_connection'
 
 type Datasource = FluentBitOpts['datasource']
 
-function exampleCurlCommand(token: string) {
-  return `curl -H 'Content-Type: application/json' -d '{"hello":"world!"}' ${window.location.href}flb/${token}`
+function exampleCurlCommand() {
+  return `curl -H 'Content-Type: application/json' -d '{"hello":"world!"}' ${window.location.href}sink`
 }
 
 function exampleFluentbitForwardCommand() {
@@ -30,24 +30,20 @@ function exampleFluentbitForwardCommand() {
   return `fluent-bit -i cpu -o forward -phost=${host}`
 }
 
-function exampleFluentbitCommand(token: string) {
+function exampleFluentbitCommand() {
   const host = window.location.hostname
   const port = window.location.port
   const tls = window.location.protocol === 'https:' ? 'on' : 'off'
-  return `fluent-bit -i cpu -o http -pformat=json -phost=${host} -pport=${port} -puri=/flb/${token} -ptls=${tls}`
+  return `fluent-bit -i cpu -o http -pformat=json -phost=${host} -pport=${port} -puri=/sink -ptls=${tls}`
 }
 
 const Home: NextPage = () => {
   const [datasource, setDatasource] = useState<Datasource>('http')
   const [connection, setConnection] = useState<FlbConnection | null>(null)
-  const [token, setToken] = useState('')
 
   useEffect(() => {
     const conn = flbConnection(datasource)
     setConnection(conn)
-    conn.once('token-received', tok => {
-      setToken(tok)
-    })
     return () => {
       conn.close()
     }
@@ -70,20 +66,17 @@ const Home: NextPage = () => {
             subheaderTypographyProps={{ color: "#0D3D61B3", fontSize: "14px", mt: 1 }} />
           <CardContent sx={{ bgcolor: "white" }}>
             <Box>
-              {datasource === "http" && token !== "" && (
+              {datasource === "http" && (
                 <Box p={2}>
                   <details>
                     <summary>
                       <Typography variant="h6" sx={{ display: "inline", paddingLeft: ".5rem" }}>Instructions</Typography>
                     </summary>
-                    <Typography variant="caption" color="GrayText">Token</Typography>
-                    <pre style={{ marginTop: 0, marginBottom: ".5rem", overflowX: "auto" }}>{token}</pre>
-
                     <Typography variant="caption" color="GrayText">Example CURL command</Typography>
-                    <pre style={{ marginTop: 0, marginBottom: ".5rem", overflowX: "auto" }}>{exampleCurlCommand(token)}</pre>
+                    <pre style={{ marginTop: 0, marginBottom: ".5rem", overflowX: "auto" }}>{exampleCurlCommand()}</pre>
 
                     <Typography variant="caption" color="GrayText">Example FluentBit command</Typography>
-                    <pre style={{ marginTop: 0, marginBottom: 0, overflowX: "auto" }}>{exampleFluentbitCommand(token)}</pre>
+                    <pre style={{ marginTop: 0, marginBottom: 0, overflowX: "auto" }}>{exampleFluentbitCommand()}</pre>
                   </details>
                 </Box>
               )}

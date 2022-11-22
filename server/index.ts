@@ -1,19 +1,12 @@
 require('dotenv').config()
 
-import { default as bodyParser, default as express } from 'express'
+import express from 'express'
 import http from 'http'
-/* import session from 'express-session'; */
-import { program } from 'commander'
 import next from 'next'
 import { WebSocketServer } from 'ws'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 import flbManager from './flb_manager'
-
-
-program
-  .option('--single-user')
-
-program.parse()
-const opts = program.opts()
+import { FLUENT_BIT_HTTP_HOST, FLUENT_BIT_HTTP_PORT } from '../common/constants'
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
@@ -22,7 +15,20 @@ const nextApp = next({ dev, hostname, port })
 const nextHandle = nextApp.getRequestHandler()
 
 const app = express()
-  .use(bodyParser.json({ limit: 1024 * 1024 * 10 }))
+const proxyPattern = /^\/sink/
+app.use(createProxyMiddleware((pathname, req) => {
+  return proxyPattern.exec(pathname) != null && req.method === 'POST'
+}, {
+  target: {
+    host: FLUENT_BIT_HTTP_HOST,
+    port: FLUENT_BIT_HTTP_PORT,
+    protocol: 'http:'
+  },
+  changeOrigin: true,
+  pathRewrite: function(path) {
+    return path.replace(proxyPattern, '/')
+  }
+}))
 
 let healthy = false
 
@@ -52,46 +58,25 @@ app.get('*', (req, res) => {
   return nextHandle(req, res)
 })
 
-app.post('/flb/:token', async (req, res) => {
-  const { token } = req.params
-  try {
-    manager.write(token, req.body)
-    res.sendStatus(200).end()
-  } catch (err) {
-    res.sendStatus(404).end()
-  }
-})
-
 const wss = new WebSocketServer({ clientTracking: false, noServer: true })
 const manager = flbManager()
 
 const userId = 'stubUser'
 
-if (opts.singleUser) {
-  const consoleToken = manager.connect(userId, {
-    send(json: string) {
-      process.stderr.write("fluent-bit:" + json + "\n", "utf-8")
-    }
-  }, { datasource: 'http' })
-
-  app.post('/console', async (req, res) => {
-    try {
-      manager.write(consoleToken, req.body)
-      res.sendStatus(200).end()
-    } catch (err) {
-      res.sendStatus(404).end()
-    }
-  })
-}
+manager.connect(userId, {
+  send(json: string) {
+    process.stderr.write("fluent-bit:" + json + "\n", "utf-8")
+  }
+}, { datasource: 'http' })
 
 wss.on('connection', (ws) => {
+  console.log("Received websocket connection upgrade")
   websocketConnections++
 
   ws.once('message', (msg) => {
     try {
       const opts = JSON.parse(msg.toString())
-      const token = manager.connect(userId, ws, opts)
-      ws.send(JSON.stringify({ token }))
+      manager.connect(userId, ws, opts)
 
       ws.on('close', function () {
         websocketConnections--
