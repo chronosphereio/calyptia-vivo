@@ -32,7 +32,7 @@ EXPOSE 5489
 EXPOSE 24224
 
 # Default to single user mode to simplify deployment
-CMD [ "node", "server/index.js", "--single-user" ]
+CMD [ "node", "server/index.js" ]
 
 # dev target handles working with local files for development
 FROM node:19 as dev

@@ -34,12 +34,12 @@ PF_PID=$!
 echo "Using local port: $LOCAL_PORT"
 
 echo "Waiting for forward to stabilise"
-until curl --fail --silent "http://localhost:$LOCAL_PORT/flb/"; do
+while [[ $(curl -o /dev/null --silent --head --write-out '%{http_code}' "http://localhost:$LOCAL_PORT/healthz/") != "200" ]]; do
     sleep 1
 done
 
 echo "Sending command"
-curl "$@" "http://localhost:${LOCAL_PORT}/console/"
+curl "$@" "http://localhost:${LOCAL_PORT}/sink/"
 
 # Kill the port-forward now
 kill -9 "$PF_PID"

@@ -1,19 +1,15 @@
-import assert from 'assert'
 import cp from 'child_process'
-import crypto from 'crypto'
 import split2 from 'split2'
 
 import { FluentBitOpts } from '../common/types'
-
-const FLUENT_BIT_EXEC_PATH = process.env.FLUENT_BIT_EXEC_PATH || '/fluent-bit/bin/fluent-bit'
+import { FLUENT_BIT_HTTP_HOST, FLUENT_BIT_HTTP_PORT, FLUENT_BIT_EXEC_PATH } from '../common/constants'
 
 export interface Socket {
   send: (json: string) => void
 }
 
 interface FlbManager {
-  connect: (userId: string, datasocket: Socket, opts: FluentBitOpts) => string
-  write: (instanceId: string, data: string) => void
+  connect: (userId: string, datasocket: Socket, opts: FluentBitOpts) => void
   disconnect: (userId: string, socket: Socket) => void
   disconnectAll: () => void
   count: () => number
@@ -22,32 +18,28 @@ interface FlbManager {
 interface FlbInstance {
   connect: (socket: Socket) => void
   disconnect: (socket: Socket) => void
-  write: (data: string) => void
   disconnectAll: () => void
   connectedCount: () => number
   datasource: () => string
 }
 
-function getToken() {
-  if (process.env.VIVO_TOKEN) {
-    console.log("Using VIVO_TOKEN variable for token.")
-    return process.env.VIVO_TOKEN
-  }
-  console.log("Generating token as no VIVO_TOKEN variable found.")
-  return crypto.randomBytes(32).toString('hex')
-};
-
 function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
   const sockets = new Set<Socket>()
 
-  const ds = datasource === 'http' ? 'stdin' : datasource
-
-  const flb = cp.spawn(FLUENT_BIT_EXEC_PATH, [
-    '-i', ds,
+  const args = [
+    '-i', datasource,
+  ].concat(datasource === 'http' ? [
+    `-phost=${FLUENT_BIT_HTTP_HOST}`,
+    `-pport=${FLUENT_BIT_HTTP_PORT}`,
+  ] : []).concat([
     '-o', 'stdout',
     '-p', 'format=json',
     '-f', '0.2'
   ])
+
+  const flb = cp.spawn(FLUENT_BIT_EXEC_PATH, args, {
+    stdio: ['ignore', 'pipe', 'pipe']
+  })
   flb.stdout.setEncoding('utf-8')
   flb.stderr.setEncoding('utf-8')
 
@@ -83,16 +75,6 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
       sockets.add(socket)
     },
 
-    write(data) {
-      if (Array.isArray(data)) {
-        for (const obj of data) {
-          flb.stdin.write(JSON.stringify(obj) + '\n')
-        }
-      } else {
-        flb.stdin.write(JSON.stringify(data) + '\n')
-      }
-    },
-
     disconnect(socket) {
       sockets.delete(socket)
 
@@ -125,8 +107,6 @@ export default function flbManager(): FlbManager {
   }
 
   const instances = new Map<string, FlbInstance>()
-  const userToToken = new Map<string, string>()
-  const tokenToUser = new Map<string, string>()
 
   return {
     connect(userId, socket, opts) {
@@ -143,25 +123,7 @@ export default function flbManager(): FlbManager {
         instances.set(userId, instance)
       }
 
-      let token = userToToken.get(userId)
-      if (!token) {
-        token = getToken()
-        userToToken.set(userId, token)
-        tokenToUser.set(token, userId)
-      }
-
       instance.connect(socket)
-      return token
-    },
-
-    write(token, data) {
-      const userId = tokenToUser.get(token)
-      if (!userId) {
-        throw new Error(`Could not find any fluent-bit instances for token ${token}`)
-      }
-      const instance = instances.get(userId)
-      assert(instance)
-      instance.write(data)
     },
 
     disconnect(userId, socket) {
