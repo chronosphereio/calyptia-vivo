@@ -68,6 +68,8 @@ function spawnFluentBit({ datasource }: FluentBitOpts): FlbInstance {
     // once all sockets are disconnected. The goal here is notify the UI if
     // something goes wrong, like fluent-bit crashes.
     broadcast({ event: 'exit', code, signal })
+    console.error("Vivo exiting because fluent-bit exited");
+    process.exit(1);
   })
 
   return {
