@@ -7,7 +7,7 @@ COPY . .
 RUN chown -R node:node /build
 USER node
 
-RUN yarn install && yarn build
+RUN yarn install --network-timeout 1000000 && yarn build
 RUN ./node_modules/.bin/tsc --noEmit false --outDir tsbuild
 
 # TODO: require full node for dependencies
@@ -25,7 +25,7 @@ COPY --from=builder /build/tsbuild/common/ common/
 
 RUN chown -R node:node /app
 USER node
-RUN yarn install --production && yarn cache clean
+RUN yarn install --network-timeout 1000000 --production && yarn cache clean
 
 ENV NODE_ENV=production
 EXPOSE 5489
