@@ -55,7 +55,7 @@ jobs:
 
       - name: Build the standard production image
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -65,7 +65,7 @@ jobs:
           target: prod
 
       - name: Test build of the dev image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           tags: ignoreme
           platforms: linux/amd64
@@ -173,7 +173,7 @@ jobs:
 
       - name: Build and push the image
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           file: Dockerfile
