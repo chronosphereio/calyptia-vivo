@@ -1,6 +1,6 @@
 FROM fluent/fluent-bit:2.0.9 as flb-downloader
 
-FROM node:18 as builder
+FROM node:19 as builder
 
 WORKDIR /build
 COPY . .
@@ -12,7 +12,7 @@ RUN ./node_modules/.bin/tsc --noEmit false --outDir tsbuild
 
 # TODO: require full node for dependencies
 # https://github.com/calyptia/vivo/issues/23
-FROM node:18-slim as prod
+FROM node:19-slim as prod
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
@@ -45,7 +45,7 @@ EXPOSE 24224
 CMD [ "node", "server/index.js" ]
 
 # dev target handles working with local files for development
-FROM node:18 as dev
+FROM node:19 as dev
 
 COPY --from=flb-downloader /fluent-bit /fluent-bit
 COPY ./start.sh /usr/local/bin/start.sh
