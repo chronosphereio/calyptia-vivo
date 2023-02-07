@@ -1,4 +1,4 @@
-FROM fluent/fluent-bit:2.0.6 as flb-downloader
+FROM fluent/fluent-bit:2.0.9 as flb-downloader
 
 FROM node:18 as builder
 
