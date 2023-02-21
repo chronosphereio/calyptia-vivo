@@ -13,7 +13,7 @@ docker compose up
 
 To deploy in Kubernetes a YAML file is provided locally: [`kubectl apply -f ./vivo-dev.yaml`](./vivo-dev.yaml).
 
-This provides a NodePort service so can be accessed anywhere in the cluster but external access may require an ingress.
+This provides a NodePort service that can be accessed anywhere in the cluster but external access may require an ingress.
 
 To view the configuration of the service run `kubectl describe svc/calyptia-vivo` which will give you the NodePort value to use for Docker Desktop.
 
