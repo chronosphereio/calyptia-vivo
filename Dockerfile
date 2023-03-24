@@ -28,6 +28,7 @@ WORKDIR /app
 
 COPY --from=flb-downloader /fluent-bit /fluent-bit
 COPY --from=builder /build/.next/ ./.next/
+RUN rm -rf .next/cache
 COPY --from=builder /build/package.json .
 COPY --from=builder /build/yarn.lock .
 COPY --from=builder /build/tsbuild/server/ server/
