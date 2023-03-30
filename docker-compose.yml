@@ -1,13 +1,18 @@
-version: "3.9"
+version: '3'
 services:
-  app:
-    image: flb-data-visualizer-dev
+  service:
     build:
-      context: .
+      context: service
       dockerfile: Dockerfile
-      target: dev
-    volumes:
-      - "./:/home/node/code"
     ports:
-      - "127.0.0.1:5489:5489"
-      - "127.0.0.1:24224:24224"
+      - "9000:24224"
+      - "9010:9880"
+      - "2025:2025"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:3000"
+    depends_on:
+      - service
