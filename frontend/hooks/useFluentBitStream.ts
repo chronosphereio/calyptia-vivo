@@ -8,6 +8,11 @@ type Opts = {
   pollInterval: number
 }
 
+type IdRecord = {
+  id: number
+  record: unknown
+}
+
 // limits records from the end
 function limitRecords(records: unknown[], max: number): unknown[] {
   const delta = records.length - max
@@ -27,15 +32,22 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
       return 0;
     }
   })();
+  let id = (() => {
+    try {
+      return parseInt(response.headers.get('vivo-stream-start-id') ?? '0');
+    } catch (err) {
+      return 0;
+    }
+  })();
   const dataLines = (await response.text()).split('\n').filter(line => line.trim() !== '');
-  return { records: dataLines.map(line => JSON.parse(line)), lastId: endId }
+  return { records: dataLines.map(line => ({ record: JSON.parse(line), id: id++ }) ), lastId: endId }
 }
 
 export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit }: Opts) {
   const [ chunks, setChunks ] = useState({
-    logs: [] as unknown[],
-    metrics: [] as unknown[],
-    traces: [] as unknown[]
+    logs: [] as IdRecord[],
+    metrics: [] as IdRecord[],
+    traces: [] as IdRecord[]
   });
   const [ kind, setKind ] = useState<StreamKind>('logs');
 
@@ -52,7 +64,7 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         lastFetchId = lastId;
         setChunks({
           ...chunks,
-          [kind]: records
+          [kind]: limitRecords(records, limit)
         });
       });
     }
@@ -67,7 +79,7 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
   }, [kind]);
 
   return {
-    records: limitRecords(chunks[kind], limit),
+    records: chunks,
     kind: kind,
     setKind: setKind
   }

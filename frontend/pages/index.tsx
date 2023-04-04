@@ -8,7 +8,7 @@ import Container from "@mui/material/Container"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import { useEffect, useState } from 'react'
-import FluentBitData from '../components/FluentBitData'
+import { FluentBitLogs, FluentBitMetricTraces } from '../components/FluentBitData'
 import useFluentBitStream, { StreamKind } from '../hooks/useFluentBitStream';
 
 const Home: NextPage = () => {
@@ -36,7 +36,7 @@ function Data() {
   const { records, kind, setKind } = useFluentBitStream({
     vivoExporterUrl: 'http://127.0.0.1:2025',
     limit: 100,
-    pollInterval: 200
+    pollInterval: 300
   });
 
   return (
@@ -53,7 +53,17 @@ function Data() {
         </Box>
         <TabPanel value="logs" sx={{ py: 0 }}>
           <Box>
-            <FluentBitData records={records} />
+            <FluentBitLogs records={records.logs} />
+          </Box>
+        </TabPanel>
+        <TabPanel value="metrics" sx={{ py: 0 }}>
+          <Box>
+            <FluentBitMetricTraces records={records.metrics} />
+          </Box>
+        </TabPanel>
+        <TabPanel value="traces" sx={{ py: 0 }}>
+          <Box>
+            <FluentBitMetricTraces records={records.traces} />
           </Box>
         </TabPanel>
       </Box>
