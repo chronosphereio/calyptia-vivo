@@ -32,12 +32,52 @@ const Home: NextPage = () => {
 
 export default Home
 
+const VIVO_EXPORTER_URL = process.env.NEXT_VIVO_EXPORTER_URL ?? 'http://127.0.0.1:2025';
+const VIVO_POLL_INTERVAL = parseInt(process.env.NEXT_VIVO_POLL_INTERVAL ?? '300');
+
 function Data() {
-  const { records, kind, setKind } = useFluentBitStream({
-    vivoExporterUrl: 'http://127.0.0.1:2025',
+  const [kind, setKind] = useState<StreamKind>('logs');
+  const { records: logs, setActive: setLogsActive } = useFluentBitStream({
+    vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
-    pollInterval: 300
+    pollInterval: VIVO_POLL_INTERVAL,
+    kind: 'logs'
   });
+
+  const { records: metrics, setActive: setMetricsActive } = useFluentBitStream({
+    vivoExporterUrl: VIVO_EXPORTER_URL,
+    limit: 100,
+    pollInterval: VIVO_POLL_INTERVAL,
+    kind: 'metrics'
+  });
+
+  const { records: traces, setActive: setTracesActive } = useFluentBitStream({
+    vivoExporterUrl: VIVO_EXPORTER_URL,
+    limit: 100,
+    pollInterval: VIVO_POLL_INTERVAL,
+    kind: 'traces'
+  });
+
+  useEffect(() => {
+    switch (kind) {
+      case 'logs':
+        setLogsActive(true);
+        setMetricsActive(false);
+        setTracesActive(false);
+        break;
+      case 'metrics':
+        setLogsActive(false);
+        setMetricsActive(true);
+        setTracesActive(false);
+        break;
+      case 'traces':
+        setLogsActive(false);
+        setMetricsActive(false);
+        setTracesActive(true);
+        break;
+    }
+  }, [kind])
+
 
   return (
     <TabContext value={kind}>
@@ -53,17 +93,17 @@ function Data() {
         </Box>
         <TabPanel value="logs" sx={{ py: 0 }}>
           <Box>
-            <FluentBitLogs records={records.logs} />
+            <FluentBitLogs records={logs} />
           </Box>
         </TabPanel>
         <TabPanel value="metrics" sx={{ py: 0 }}>
           <Box>
-            <FluentBitMetricTraces records={records.metrics} />
+            <FluentBitMetricTraces records={metrics} />
           </Box>
         </TabPanel>
         <TabPanel value="traces" sx={{ py: 0 }}>
           <Box>
-            <FluentBitMetricTraces records={records.traces} />
+            <FluentBitMetricTraces records={traces} />
           </Box>
         </TabPanel>
       </Box>

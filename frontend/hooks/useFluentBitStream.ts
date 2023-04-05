@@ -6,6 +6,7 @@ type Opts = {
   vivoExporterUrl: string
   limit: number
   pollInterval: number
+  kind: StreamKind
 }
 
 type IdRecord = {
@@ -14,7 +15,7 @@ type IdRecord = {
 }
 
 // limits records from the end
-function limitRecords(records: unknown[], max: number): unknown[] {
+function limitRecords<T>(records: T[], max: number): T[] {
   const delta = records.length - max
   if (delta > 0) {
     return records.slice(delta)
@@ -43,18 +44,17 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
   return { records: dataLines.map(line => ({ record: JSON.parse(line), id: id++ }) ), lastId: endId }
 }
 
-export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit }: Opts) {
-  const [ chunks, setChunks ] = useState({
-    logs: [] as IdRecord[],
-    metrics: [] as IdRecord[],
-    traces: [] as IdRecord[]
-  });
-  const [ kind, setKind ] = useState<StreamKind>('logs');
+export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit, kind }: Opts) {
+  const [ records, setRecords ] = useState([] as IdRecord[])
+  const [ active, setActive ] = useState(false);
 
   useEffect(() => {
+    if (!active) {
+      return;
+    }
     let lastFetchId = 0;
-    let id: ReturnType<typeof setTimeout> | null = null;
 
+    let id: ReturnType<typeof setTimeout> | null = null;
     const fetcher = () => {
       id = null;
 
@@ -62,10 +62,7 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         // use setTimeout vs setInterval to ensure there are no overlapping requests
         id = setTimeout(fetcher, pollInterval);
         lastFetchId = lastId;
-        setChunks({
-          ...chunks,
-          [kind]: limitRecords(records, limit)
-        });
+        setRecords(records);
       });
     }
 
@@ -76,11 +73,10 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         clearTimeout(id);
       }
     }
-  }, [kind]);
+  }, [active]);
 
   return {
-    records: chunks,
-    kind: kind,
-    setKind: setKind
+    records: limitRecords(records, limit),
+    setActive: setActive
   }
 }
