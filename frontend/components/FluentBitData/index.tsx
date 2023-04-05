@@ -47,8 +47,8 @@ export function FluentBitLogs({ records }: FluentBitDataProps) {
                       </IconButton>
                     </Stack>
                   </Box>
-                  <code style={{ whiteSpace: "pre" }}>{JSON.stringify({ ...record, date: undefined }, null, fold ? 2 : undefined)}</code>
                   <code style={{ whiteSpace: "pre" }}>{JSON.stringify({ ...meta, date: undefined }, null, fold ? 2 : undefined)}</code>
+                  <code style={{ whiteSpace: "pre" }}>{JSON.stringify({ ...record, date: undefined }, null, fold ? 2 : undefined)}</code>
                 </Stack>
               </Box>
             </ListItem>
