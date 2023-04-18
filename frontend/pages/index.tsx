@@ -1,60 +1,39 @@
-import TabPanel from "@mui/lab/TabPanel"
-import TabContext from "@mui/lab/TabContext"
-import TabList from "@mui/lab/TabList"
-import Tab from "@mui/material/Tab"
 import type { NextPage } from 'next'
-import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
 import { useEffect, useState } from 'react'
 import { FluentBitLogs, FluentBitMetricTraces } from '../components/FluentBitData'
 import useFluentBitStream, { StreamKind } from '../hooks/useFluentBitStream';
+import VivoPage from '@/components/VivoPage';
 
 const Home: NextPage = () => {
-
-  return (
-    <Box my={4}>
-      <Container>
-        <Card elevation={0} sx={{ border: "1px solid rgba(63, 81, 181, 0.14)" }}>
-          <CardContent sx={{ bgcolor: "white" }}>
-            <Box>
-              <Box my={2}>
-                <Data />
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      </Container>
-    </Box>
-  )
-}
-
-export default Home
-
-const VIVO_EXPORTER_URL = process.env.NEXT_VIVO_EXPORTER_URL ?? 'http://127.0.0.1:2025';
-const VIVO_POLL_INTERVAL = parseInt(process.env.NEXT_VIVO_POLL_INTERVAL ?? '300');
-
-function Data() {
   const [kind, setKind] = useState<StreamKind>('logs');
+  const [pollInterval, setPollInterval] = useState<number>(5000);
+  const [play, setPlay] = useState<boolean>(true);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+  const [data, setData] = useState<any>(undefined);
+  const [recordEnd, setRecordEnd] = useState<number|undefined>(undefined);
+  const [page, setPage] = useState<number>(0);
+  const [startRecord, setStartRecord] = useState<number>(1);
+  const [metadataFilter, setMetadataFilter] = useState<string | undefined>(undefined);
+  const [eventFilter, setEventFilter] = useState<string | undefined>(undefined);
+
   const { records: logs, setActive: setLogsActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
-    pollInterval: VIVO_POLL_INTERVAL,
+    pollInterval: play ? pollInterval : 0,
     kind: 'logs'
   });
 
   const { records: metrics, setActive: setMetricsActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
-    pollInterval: VIVO_POLL_INTERVAL,
+    pollInterval: play ? pollInterval : 0,
     kind: 'metrics'
   });
 
   const { records: traces, setActive: setTracesActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
-    pollInterval: VIVO_POLL_INTERVAL,
+    pollInterval: play ? pollInterval : 0,
     kind: 'traces'
   });
 
@@ -76,38 +55,58 @@ function Data() {
         setTracesActive(true);
         break;
     }
-  }, [kind])
+  }, [kind, setLogsActive, setMetricsActive, setTracesActive])
 
+  useEffect(() => {
+    let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
+    selectedData = selectedData.filter(data => {
+      if (eventFilter) {
+        if (!JSON.stringify((data.record as Array<string>)[1]).includes(eventFilter)) {
+          return false;
+        }
+      }
+
+      if(metadataFilter) {
+        if(!JSON.stringify((data.record as Array<Array<string>>)[0][1]).includes(metadataFilter)) {
+          return false;
+        }
+      }
+
+      return true;
+    })
+    setRecordEnd(selectedData.length)
+    const start = page * rowsPerPage
+    selectedData = selectedData.slice(start, (start+1)*Number(rowsPerPage))
+    setStartRecord(start+1)
+    setData(selectedData)
+  }, [logs, metrics, traces, rowsPerPage, page])
+
+  const filterActionHandler = (target: string, field:string) => {
+    field === 'metadata' ? setMetadataFilter(target) : setEventFilter(target)
+    setPage(0)
+  }
 
   return (
-    <TabContext value={kind}>
-      <Box display="grid" gridTemplateColumns="auto 1fr">
-        <Box sx={{ borderRight: 1, borderColor: 'divider' }}>
-          <TabList orientation="vertical" onChange={(_, newVal) => {
-            setKind(newVal)
-          }}>
-            <Tab label="Logs" value="logs" sx={{ whiteSpace: "nowrap" }} />
-            <Tab label="Metrics" value="metrics" sx={{ whiteSpace: "nowrap" }} />
-            <Tab label="Traces" value="traces" sx={{ whiteSpace: "nowrap" }} />
-          </TabList>
-        </Box>
-        <TabPanel value="logs" sx={{ py: 0 }}>
-          <Box>
-            <FluentBitLogs records={logs} />
-          </Box>
-        </TabPanel>
-        <TabPanel value="metrics" sx={{ py: 0 }}>
-          <Box>
-            <FluentBitMetricTraces records={metrics} />
-          </Box>
-        </TabPanel>
-        <TabPanel value="traces" sx={{ py: 0 }}>
-          <Box>
-            <FluentBitMetricTraces records={traces} />
-          </Box>
-        </TabPanel>
-      </Box>
-    </TabContext >
+    <VivoPage 
+      menuActionHandler={(target) => setKind(target as StreamKind)}
+      learnHowActionHandler={() => alert('learn')}
+      recordStart={startRecord.toString()}
+      recordEnd={recordEnd?.toString()}
+      recordsPerPage={rowsPerPage.toString()}
+      pageChangeHandler={(value) => setPage(page + value)}
+      rowsPerPageHandler={(value) => setRowsPerPage(value)}
+      filterActionHandler={filterActionHandler}
+      rateActionHandler={(value) => setPollInterval(value)}
+      playActionHandler={(play) => setPlay(!play)}
+      clearActionHandler={() => alert('clear')}
+      play={play}
+      tab={kind}
+      data={data}
+      page={page}
+    />
   )
 }
 
+export default Home
+
+const VIVO_EXPORTER_URL = process.env.NEXT_VIVO_EXPORTER_URL ?? 'http://127.0.0.1:2025';
