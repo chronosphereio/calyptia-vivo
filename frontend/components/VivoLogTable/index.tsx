@@ -1,5 +1,6 @@
 import { Header, LogEvent } from './elements';
 import { Box } from '@mui/material';
+import List from "@mui/material/List"
 
 import { PAPER_STYLE } from './constants'
 
@@ -25,13 +26,15 @@ const VivoLogTable = ({ rows, kind }: VivoLogTableProps) => {
   return (
     <Box sx={PAPER_STYLE} >
       <Header headings={columns[kind]} />
+      <List sx={{ display: "flex", flexDirection: "column-reverse" }}>
       {rows && rows.map((row) => {
         const key = row.id.toString();
-        const timestamp = Math.floor(row.record[0][0] / 1e6);
+        const timestamp = kind === 'logs' ? Math.floor(row.record[0][0] / 1e6) : 0;
         const meta = kind === 'logs' ? JSON.stringify(row.record[0][1]) : undefined
         const event = kind === 'logs' ? JSON.stringify(row.record[1]) : JSON.stringify(row.record)
         return <LogEvent key={key} timestamp={timestamp} meta={meta} event={event} kind={kind} />
       })}
+      </List>
     </Box>
   );
 };
