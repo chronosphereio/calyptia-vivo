@@ -2,7 +2,6 @@ import { CodeBoxCM } from '../../../components/CodeBoxCM';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import { Box, Collapse, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import beautify_js from 'js-beautify'
 
 import { LOG_DETAIL_PANEL, LOG_EVENT_BOX_STYLE, LOG_EVENT_ROW_STYLE } from '../constants';
 
@@ -22,12 +21,14 @@ const formatTimestamp = (timestamp: number) => {
   return `${formatDate} | ${formatTime}`
 }
 
+function beautify(json: string) {
+  return JSON.stringify(JSON.parse(json), null, 2);
+}
+
 const LogEvent = ({ timestamp, meta = '', event = '', truncate = 72, kind }: LogEventProps) => {
 
   const [expandedView, setExpandedView] = useState<boolean | undefined>(false);
   const truncateValue = (value: string) => (value.length > truncate ? `${value.substring(0, truncate)}...` : value);
-  const formattedMeta = beautify_js(meta, { indent_size: 2 });
-  const formattedEvent = beautify_js(event, { indent_size: 2 });
   return (
     <Box sx={LOG_EVENT_BOX_STYLE}>
       {kind === 'logs' ? 
@@ -60,14 +61,14 @@ const LogEvent = ({ timestamp, meta = '', event = '', truncate = 72, kind }: Log
         {kind === 'logs' ?
           <Stack direction="column" sx={LOG_DETAIL_PANEL}>
             <Typography>Metadata</Typography>
-            <CodeBoxCM value={formattedMeta} height="152px" language="json" />
+            <CodeBoxCM value={beautify(meta)} height="152px" language="json" />
             <Typography>Event</Typography>
-            <CodeBoxCM value={formattedEvent} height="266px" language="json" />
+            <CodeBoxCM value={beautify(event)} height="266px" language="json" />
           </Stack>
         :
           <Stack direction="column" sx={LOG_DETAIL_PANEL}>
             <Typography>Event</Typography>
-            <CodeBoxCM value={formattedEvent} height="266px" language="json" />
+            <CodeBoxCM value={beautify(event)} height="266px" language="json" />
           </Stack> 
         }
 
