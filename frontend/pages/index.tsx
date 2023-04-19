@@ -62,13 +62,13 @@ const Home: NextPage = () => {
     let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
     selectedData = selectedData.filter(data => {
       if (eventFilter) {
-        if (!JSON.stringify((data.record as Array<string>)[1]).includes(eventFilter)) {
+        if (!JSON.stringify((data.record as Array<string>)).toLowerCase().includes(eventFilter.toLowerCase())) {
           return false;
         }
       }
 
-      if(metadataFilter) {
-        if(!JSON.stringify((data.record as Array<Array<string>>)[0][1]).includes(metadataFilter)) {
+      if(metadataFilter && kind === 'logs') {
+        if(!JSON.stringify((data.record as Array<Array<string>>)[0][1]).toLowerCase().includes(metadataFilter.toLowerCase())) {
           return false;
         }
       }
