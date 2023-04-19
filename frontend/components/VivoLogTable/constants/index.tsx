@@ -111,7 +111,6 @@ export const LOG_DETAIL_PANEL = {
   fontWeight: 500,
   fontSize: '13px',
   lineHeight: '16px',
-  textTransform: 'uppercase',
   '& .cm-scroller': {
     borderRadius: '8px',
   },
