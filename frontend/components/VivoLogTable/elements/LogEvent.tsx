@@ -7,7 +7,7 @@ import { LOG_DETAIL_PANEL, LOG_EVENT_BOX_STYLE, LOG_EVENT_ROW_STYLE } from '../c
 
 export interface LogEventProps {
   timestamp?: number;
-  meta: string,
+  meta?: string,
   event: string,
   truncate?: number;
   kind: string;
@@ -28,7 +28,7 @@ const LogEvent = ({ timestamp, meta = '', event = '', truncate = 72, kind }: Log
 
   return (
     <Box sx={LOG_EVENT_BOX_STYLE}>
-      {kind != 'traces' ? 
+      {kind === 'logs' ? 
         (
           <Stack direction="row" sx={LOG_EVENT_ROW_STYLE}>
             <Typography className={`cell-0 ${expandedView ? 'expanded' : ''}`}>{formatTimestamp(timestamp || 0)}</Typography>
@@ -55,7 +55,7 @@ const LogEvent = ({ timestamp, meta = '', event = '', truncate = 72, kind }: Log
         }
       <Collapse in={expandedView}>
 
-        {kind != 'traces' ?
+        {kind === 'logs' ?
           <Stack direction="column" sx={LOG_DETAIL_PANEL}>
             <Typography>Metadata</Typography>
             <CodeBoxCM value={meta} height="152px" language="json" />
