@@ -25,7 +25,7 @@ const VivoFilterBar = ({
 }: VivoFilterBarProps) => {
   return (
     <Stack direction="row" sx={FILTER_BAR_STYLE} >
-      { kind != 'traces' ? 
+      { kind === 'logs' ? 
         <Stack direction="row">
           <InputFilter
               changeHandler={(value: string) => filterActionHandler(value, 'metadata')}

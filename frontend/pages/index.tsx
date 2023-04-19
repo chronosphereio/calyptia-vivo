@@ -38,6 +38,7 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
+    console.log(kind)
     switch (kind) {
       case 'logs':
         setLogsActive(true);

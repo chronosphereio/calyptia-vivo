@@ -18,15 +18,20 @@ type ContentSwitcher = { [key: string]: string[]; }
 const VivoLogTable = ({ rows, kind }: VivoLogTableProps) => {
   const columns : ContentSwitcher = {
     'logs': ['Time', 'Metadata', 'Event'],
-    'metrics': ['Time', 'Metadata', 'Event'],
-    'traces': ['Event']
+    'metrics': ['Metric'],
+    'traces': ['Trace']
   }
+
   return (
     <Box sx={PAPER_STYLE} >
       <Header headings={columns[kind]} />
-      {rows && rows.map((row) => (
-        <LogEvent key={row.record[0][0]} timestamp={row.record[0][0]} meta={JSON.stringify(row.record[0][1])} event={JSON.stringify(row.record[1])} kind={kind} />
-      ))}
+      {rows && rows.map((row) => {
+        const key = kind === 'logs' ? row.record[0][0] : JSON.stringify(row.record)
+        const timestamp = kind === 'logs' ? row.record[0][0] : undefined
+        const meta = kind === 'logs' ? JSON.stringify(row.record[0][1]) : undefined
+        const event = kind === 'logs' ? JSON.stringify(row.record[1]) : JSON.stringify(row.record)
+        return <LogEvent key={key} timestamp={timestamp} meta={meta} event={event} kind={kind} />
+      })}
     </Box>
   );
 };
