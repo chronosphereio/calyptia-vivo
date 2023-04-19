@@ -15,6 +15,7 @@ const Home: NextPage = () => {
   const [startRecord, setStartRecord] = useState<number>(1);
   const [metadataFilter, setMetadataFilter] = useState<string | undefined>(undefined);
   const [eventFilter, setEventFilter] = useState<string | undefined>(undefined);
+  const [activeType, setActiveType] = useState<string>('logs')
 
   const { records: logs, setActive: setLogsActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
@@ -38,17 +39,16 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
-    console.log(kind)
     switch (kind) {
       case 'logs':
-        setLogsActive(true);
         setMetricsActive(false);
         setTracesActive(false);
+        setLogsActive(true);
         break;
       case 'metrics':
         setLogsActive(false);
-        setMetricsActive(true);
         setTracesActive(false);
+        setMetricsActive(true);
         break;
       case 'traces':
         setLogsActive(false);
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
         setTracesActive(true);
         break;
     }
-  }, [kind, setLogsActive, setMetricsActive, setTracesActive])
+  }, [kind])
 
   useEffect(() => {
     let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
@@ -80,7 +80,8 @@ const Home: NextPage = () => {
     selectedData = selectedData.slice(start, (start+1)*Number(rowsPerPage))
     setStartRecord(start+1)
     setData(selectedData)
-  }, [logs, metrics, traces, rowsPerPage, page])
+    setActiveType(kind)
+  }, [kind, logs, metrics, traces, rowsPerPage, page])
 
   const filterActionHandler = (target: string, field:string) => {
     field === 'metadata' ? setMetadataFilter(target) : setEventFilter(target)
@@ -89,7 +90,9 @@ const Home: NextPage = () => {
 
   return (
     <VivoPage 
-      menuActionHandler={(target) => setKind(target as StreamKind)}
+      menuActionHandler={(target) => {
+        setKind(target as StreamKind)
+      }}
       learnHowActionHandler={() => alert('learn')}
       recordStart={startRecord.toString()}
       recordEnd={recordEnd?.toString()}
@@ -101,7 +104,7 @@ const Home: NextPage = () => {
       playActionHandler={(play) => setPlay(!play)}
       clearActionHandler={() => alert('clear')}
       play={play}
-      tab={kind}
+      tab={activeType}
       data={data}
       page={page}
     />
