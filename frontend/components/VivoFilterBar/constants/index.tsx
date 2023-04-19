@@ -25,7 +25,7 @@ export const BUTTON_GROUP = {
     fontStyle: 'normal',
     fontWeight: 400,
     color: '#686A7F',
-    fontSize: '14px',
+    fontSize: '12px',
     border: '0.5px solid',
     borderRadius: '5px',
     borderRight: '0.5px solid',
@@ -76,11 +76,13 @@ export const INPUT_STYLE = {
     px: 2,
     width: '226px',
     height: '34px',
+    fontSize: '12px'
   },
   '& label': {
     left: '20px',
-    top: '-10px',
+    top: '-8px',
     color: '#A0A2B6',
+    fontSize: '12px'
   },
   '& .Mui-focused, & .MuiFormLabel-filled': {
     top: '0px',
