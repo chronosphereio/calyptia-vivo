@@ -93,7 +93,7 @@ const Home: NextPage = () => {
       menuActionHandler={(target) => {
         setKind(target as StreamKind)
       }}
-      learnHowActionHandler={() => alert('learn')}
+      learnHowActionHandler={() => (window.location.href = 'https://github.com/calyptia/vivo')}
       recordStart={startRecord.toString()}
       recordEnd={recordEnd?.toString()}
       recordsPerPage={rowsPerPage.toString()}
