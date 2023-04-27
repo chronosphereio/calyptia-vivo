@@ -32,6 +32,12 @@ EXPOSE 24224
 # Fluent Bit HTTP Input
 EXPOSE 9880
 
+# Fluent Bit webserver
+EXPOSE 2020
+
+# Vivo port
+EXPOSE 2025
+
 ### Run the binary application
 ENV PATH="$PATH:/fluent-bit/bin/:/app/"
 

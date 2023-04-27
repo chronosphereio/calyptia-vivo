@@ -91,8 +91,8 @@ jobs:
       - name: Apply local service using image from this run
         run: |
           sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-dev.yaml
-          cat ./vivo-dev.yaml
-          kubectl apply -f ./vivo-dev.yaml
+          cat ./vivo-deployment.yaml
+          kubectl apply -f ./vivo-deployment.yaml
         shell: bash
 
       - name: Check it is running ok
@@ -126,13 +126,6 @@ jobs:
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace default || true
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace kube-system || true
         shell: bash
-
-      - name: Dump docker logs on failure
-        continue-on-error: true
-        if: failure()
-        uses: jwalton/gh-docker-logs@v2
-        with:
-          images: 'vivo,nginx'
 
   release-container-images-on-tag:
     if: startsWith(github.ref, 'refs/tags/')
