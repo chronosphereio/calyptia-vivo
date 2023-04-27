@@ -183,16 +183,15 @@ jobs:
             type=semver,pattern={{version}}
             type=raw,value=latest
 
-      - name: Build and push the image
+      - name: Build the ${{ matrix.container }} image
         id: docker_build
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.container }}
-          file: Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          push: true
           target: production
 
       - name: Images digests
