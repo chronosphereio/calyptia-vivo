@@ -4,7 +4,7 @@
 
 ![Screenshot of the UI](docs/hello_calyptia.png)
 
-## Why a rewrite ?
+## Why a rewrite?
 
 This version has been refactored significantly since the previous version for a few improvements:
 
