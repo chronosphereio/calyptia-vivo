@@ -117,6 +117,7 @@ jobs:
           done
           echo
           echo "Deployment completed successfully"
+          kubectl get all
         shell: bash
 
       - name: Inject HTTP traffic
@@ -137,6 +138,8 @@ jobs:
           wget https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace default || true
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace kube-system || true
+          kubectl describe pods
+          kubectl describe services
         shell: bash
 
   release-container-images-on-tag:
