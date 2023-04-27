@@ -23,7 +23,7 @@ The following components are used in Vivo:
 - [component] Fluent Bit: telemetry agent with new export/streaming capabilities
 
 To simplify the data management per type, Fluent Bit now supports a new output plugin called [Vivo Exporter](https://docs.fluentbit.io/manual/v/dev-2.1/pipeline/outputs/vivo-exporter).
-This plugin buffers telemetry data in a queue of a fixed size and exposes the content through HTTP endpoints: `/logs`, `/metrics`, `/traces`. 
+This plugin buffers telemetry data in a queue of a fixed size and exposes the content through HTTP endpoints: `/logs`, `/metrics`, `/traces`.
 The UI part pulls data from there.
 
 All the data retrieved from the Fluent Bit Vivo Exporter is in JSON format, and each event type has a well-defined specific structure.

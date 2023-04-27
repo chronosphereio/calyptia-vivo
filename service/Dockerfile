@@ -1,6 +1,6 @@
 ######### Go Builder
 
-FROM golang:1.20 as service-builder
+FROM golang:1.20 as builder
 
 # Working directory
 WORKDIR /app
@@ -13,15 +13,14 @@ COPY . /app
 # Build the go app
 RUN go build -o vivo-service .
 
-
 ######## Fluent Bit
-FROM ghcr.io/fluent/fluent-bit/unstable:master as production
+FROM fluent/fluent-bit:2.1.2 as production
 
 ### Set working directory
 WORKDIR /app
 
 ### Copy built binary application from 'builder' image
-COPY --from=service-builder /app/vivo-service .
+COPY --from=builder /app/vivo-service .
 COPY ./fluent-bit.conf .
 
 # Expose ports
