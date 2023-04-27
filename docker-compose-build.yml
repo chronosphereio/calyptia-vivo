@@ -1,13 +1,17 @@
 version: '3'
 services:
   service:
-    image: calyptia/vivo-service
+    build:
+      context: service
+      dockerfile: Dockerfile
     ports:
       - "9000:24224"
       - "9010:9880"
       - "2025:2025"
   frontend:
-    image: calyptia/vivo-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "8000:3000"
     depends_on:

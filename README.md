@@ -35,20 +35,56 @@ The following end-points will be available:
 These are provided on the `calyptia-vivo` service created by the deployment or locally if running in podman.
 Port forwarding can be used to expose them locally.
 
+To access the UI (make sure to forward the 2025 port otherwise it fails to connect via localhost to it):
+
+```shell
+kubectl port-forward svc/calyptia-vivo 8000:8000 2025:2025
+```
+
+You can access the Web interface by using the following address: <http://127.0.0.1:8000>
+
 If you have Docker in your environment then start the services with `docker compose` (or for older versions `docker-compose`):
 
 ```shell
 docker compose up
 ```
 
-You can access the Web interface by using the following address: <http://127.0.0.1:8000>
-
 ### Ingesting sample data
+
+For K8S ensure an ingress or port-forward is set up:
+
+```shell
+kubectl port-forward svc/calyptia-vivo 9010:9010
+```
 
 Use `curl` to send to the HTTP input port:
 
 ```shell
 curl -XPOST -H "Content-Type: application/json" -d '{"hello": "Calyptia!"}' http://127.0.0.1:9010
+```
+
+You can also check the Vivo Exporter directly via another endpoint:
+
+```shell
+kubectl port-forward svc/calyptia-vivo 2025:2025
+```
+
+Now hit the endpoint for logs, metrics or traces:
+
+```shell
+$ curl -i http://127.0.0.1:2025/logs
+HTTP/1.1 200 OK
+Server: Monkey/1.7.0
+Date: Thu, 27 Apr 2023 14:35:09 GMT
+Transfer-Encoding: chunked
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept
+Access-Control-Expose-Headers: vivo-stream-start-id, vivo-stream-end-id
+Vivo-Stream-Start-ID: 0
+Vivo-Stream-End-ID: 1
+
+[[1682605659450986675,{"_tag":"http.1"}],{"hello":"Calyptia!"}]
 ```
 
 ## Known Issues or fixes needed
