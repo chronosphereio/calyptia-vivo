@@ -13,14 +13,21 @@ on:
       - master
 
 jobs:
-  build-container-images:
+  build-container-images: 
     outputs:
-      digest: ${{ steps.docker_build.outputs.digest }}
+      service-digest: ${{ steps.outputs.outputs.service-digest }}
+      frontend-digest: ${{ steps.outputs.outputs.frontend-digest }}
     permissions:
       contents: read
       packages: write
-    name: Build container images
+    name: Build ${{ matrix.container }} container image
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: 
+        container:
+          - service
+          - frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -42,7 +49,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}/${{ matrix.container }}
           # Ensure we strip any 'v' prefix, provide a SHA and a latest tag only for default branch (master)
           tags: |
             type=semver,pattern={{version}},event=tag
@@ -53,25 +60,27 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Build the standard production image
+      - name: Build the ${{ matrix.container }} image
         id: docker_build
         uses: docker/build-push-action@v4
         with:
+          context: ${{ matrix.container }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           push: true
           load: false
-          target: prod
+          target: production
 
-      - name: Test build of the dev image
-        uses: docker/build-push-action@v4
-        with:
-          tags: ignoreme
-          platforms: linux/amd64
-          push: false
-          load: false
-          target: dev
+      - name: ${{ matrix.container }} digests
+        run: echo ${{ steps.docker_build.outputs.digest }}
+        shell: bash
+
+      - name: Set up outputs
+        id: outputs
+        run: |
+          echo "${{ matrix.container }}-digest=${{ steps.docker_build.outputs.digest }}" >> $GITHUB_OUTPUT
+        shell: bash
 
   test-container-images:
     name: Test container images
@@ -92,9 +101,10 @@ jobs:
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-dev.yaml
-          cat ./vivo-dev.yaml
-          kubectl apply -f ./vivo-dev.yaml
+          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs.service-digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs.frontend-digest }}|g' ./vivo-deployment.yaml
+          cat ./vivo-deployment.yaml
+          kubectl apply -f ./vivo-deployment.yaml
         shell: bash
 
       - name: Check it is running ok
@@ -107,6 +117,7 @@ jobs:
           done
           echo
           echo "Deployment completed successfully"
+          kubectl get all
         shell: bash
 
       - name: Inject HTTP traffic
@@ -127,24 +138,25 @@ jobs:
           wget https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace default || true
           /bin/bash ./kubetail --follow false --previous false --colored-output false --namespace kube-system || true
+          kubectl describe pods
+          kubectl describe services
         shell: bash
 
-      - name: Dump docker logs on failure
-        continue-on-error: true
-        if: failure()
-        uses: jwalton/gh-docker-logs@v2
-        with:
-          images: 'vivo,nginx'
-
-  release-on-tag:
+  release-container-images-on-tag:
     if: startsWith(github.ref, 'refs/tags/')
-    name: Create release
+    name: Create release image for ${{ matrix.container }}
     needs:
       - build-container-images
       - test-container-images
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix: 
+        container:
+          - service
+          - frontend
     steps:
       - uses: actions/checkout@v3
 
@@ -165,8 +177,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            calyptia/vivo
-            calyptiaci/vivo
+            calyptia/vivo-${{ matrix.container }}
+            calyptiaci/vivo-${{ matrix.container }}
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
@@ -175,23 +187,33 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ${{ matrix.container }}
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          target: prod
+          target: production
 
       - name: Images digests
         run: echo ${{ steps.docker_build.outputs.digest }}
+        shell: bash
 
       - uses: sigstore/cosign-installer@main
       - name: Sign Container Image
         continue-on-error: true
         run: |
-          COSIGN_EXPERIMENTAL=1 cosign sign --force calyptia/core-docker-desktop@${{ steps.docker_build.outputs.digest }}
+          cosign sign --force --yes calyptia/vivo-${{ matrix.container }}@${{ steps.docker_build.outputs.digest }}
+        shell: bash
 
+  release-on-tag:
+    name: Create release
+    needs:
+      - release-container-images-on-tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
       - name: Release on tag
         uses: softprops/action-gh-release@v1
         with:

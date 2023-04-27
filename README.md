@@ -2,17 +2,7 @@
 
 [Vivo](https://github.com/calyptia/vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
 
-![](docs/hello_calyptia.png)
-
-## Why a rewrite ?
-
-This version has been refactored significantly since the previous version for a few improvements:
-
-- Support the existing Logs type, but also Metrics and Traces.
-- Reduce image size.
-- Use dedicated Vivo output plugin from Fluent Bit.
-
-The previous version used to depend on Fluent Bit `stdout` to trap records output which is difficult and brittle to extend for different types of telemetry data.
+![Screenshot of the UI](docs/hello_calyptia.png)
 
 ## Architecture
 
@@ -23,22 +13,17 @@ The following components are used in Vivo:
 - [component] Fluent Bit: telemetry agent with new export/streaming capabilities
 
 To simplify the data management per type, Fluent Bit now supports a new output plugin called [Vivo Exporter](https://docs.fluentbit.io/manual/v/dev-2.1/pipeline/outputs/vivo-exporter).
-This plugin buffers telemetry data in a queue of a fixed size and exposes the content through HTTP endpoints: `/logs`, `/metrics`, `/traces`. 
+This plugin buffers telemetry data in a queue of a fixed size and exposes the content through HTTP endpoints: `/logs`, `/metrics`, `/traces`.
 The UI part pulls data from there.
 
 All the data retrieved from the Fluent Bit Vivo Exporter is in JSON format, and each event type has a well-defined specific structure.
 
 ## Running locally
 
-Make sure you have Docker in your environment, then inside this repository, start the services with `docker compose` (or for older versions `docker-compose`):
+A [K8S deployment is provided](./vivo-deployment.yaml) to simplify usage, e.g. with [KIND](https://kind.sigs.k8s.io/) which is used for CI testing.
+This can also be run via [Podman](https://podman.io/): <https://docs.podman.io/en/latest/markdown/podman-kube.1.html>
 
-```shell
-docker compose up
-```
-
-You can access the Web interface by using the following address: <http://127.0.0.1:8000>
-
-After a successful start, the following end-points will be available:
+The following end-points will be available:
 
 | Port | Interface | Description |
 | --- | --- | --- |
@@ -47,11 +32,22 @@ After a successful start, the following end-points will be available:
 | 9010 | HTTP Input | Data ingestion through HTTP |
 | 2025 | Vivo Exporter | Fluent Bit Vivo streams where the UI pulls data from. This is always exposed. |
 
+These are provided on the `calyptia-vivo` service created by the deployment or locally if running in podman.
+Port forwarding can be used to expose them locally.
+
+If you have Docker in your environment then start the services with `docker compose` (or for older versions `docker-compose`):
+
+```shell
+docker compose up
+```
+
+You can access the Web interface by using the following address: <http://127.0.0.1:8000>
+
 ### Ingesting sample data
 
-Let's use `curl`:
+Use `curl` to send to the HTTP input port:
 
-```
+```shell
 curl -XPOST -H "Content-Type: application/json" -d '{"hello": "Calyptia!"}' http://127.0.0.1:9010
 ```
 
