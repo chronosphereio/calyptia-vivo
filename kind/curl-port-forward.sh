@@ -16,30 +16,25 @@ function find_unused_port() {
 }
 
 function cleanup() {
-    if [[ -n "$PF_PID" ]]; then
-        kill -9 "$PF_PID"
+    if [[ -n "$PF_HTTP_PID" ]]; then
+        kill -9 "$PF_HTTP_PID"
     fi
 }
 
-PF_PID=""
+PF_HTTP_PID=""
 
 trap cleanup err EXIT
 
 # Set up local port forward to an ephemeral port and extract that port
-LOCAL_PORT=$(find_unused_port)
+LOCAL_HTTP_PORT=$(find_unused_port)
 
-kubectl -n "${NAMESPACE:-default}" port-forward --address 127.0.0.1 svc/calyptia-vivo "${LOCAL_PORT}:5489" &
-PF_PID=$!
+kubectl -n "${NAMESPACE:-default}" port-forward --address 127.0.0.1 svc/calyptia-vivo "${LOCAL_HTTP_PORT}:9010" &
+PF_HTTP_PID=$!
 
-echo "Using local port: $LOCAL_PORT"
-
-echo "Waiting for forward to stabilise"
-while [[ $(curl -o /dev/null --silent --head --write-out '%{http_code}' "http://localhost:$LOCAL_PORT/healthz/") != "200" ]]; do
-    sleep 1
-done
-
+echo "Using local port: $LOCAL_HTTP_PORT"
 echo "Sending command"
-curl "$@" "http://localhost:${LOCAL_PORT}/sink/"
+curl "$@" "http://localhost:${LOCAL_HTTP_PORT}"
 
 # Kill the port-forward now
-kill -9 "$PF_PID"
+kill -9 "$PF_HTTP_PID"
+PF_HTTP_PID=""

@@ -20,6 +20,9 @@ spec:
     - name: "ui"
       port: 8000
       targetPort: 3000
+    - name: "fluent-bit"
+      port: 2020
+      targetPort: 2020
   selector:
     app.kubernetes.io/name: vivo
     app.kubernetes.io/instance: calyptia
