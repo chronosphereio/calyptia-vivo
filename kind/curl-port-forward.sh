@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+REMOTE_PORT=${REMOTE_PORT:-9010}
+
 # Simple script to wrap a call to curl in a one-shot port-forward for it.
 function find_unused_port() {
     local portnum
@@ -28,12 +30,15 @@ trap cleanup err EXIT
 # Set up local port forward to an ephemeral port and extract that port
 LOCAL_HTTP_PORT=$(find_unused_port)
 
-kubectl -n "${NAMESPACE:-default}" port-forward --address 127.0.0.1 svc/calyptia-vivo "${LOCAL_HTTP_PORT}:9010" &
+kubectl -n "${NAMESPACE:-default}" port-forward --address 127.0.0.1 svc/calyptia-vivo "${LOCAL_HTTP_PORT}:$REMOTE_PORT" &
 PF_HTTP_PID=$!
 
 echo "Using local port: $LOCAL_HTTP_PORT"
 echo "Sending command"
-curl "$@" "http://localhost:${LOCAL_HTTP_PORT}"
+until curl "$@" "http://localhost:${LOCAL_HTTP_PORT}"; do
+    # Back off if an issue at startup with constructing the forward
+    sleep 5
+done
 
 # Kill the port-forward now
 kill -9 "$PF_HTTP_PID"
