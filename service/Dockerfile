@@ -13,8 +13,7 @@ COPY . /app
 RUN go build -o vivo-service .
 
 ######## Fluent Bit
-ARG FLUENT_BIT_VERSION=2.1.2
-FROM fluent/fluent-bit:$FLUENT_BIT_VERSION as production
+FROM fluent/fluent-bit:2.1.2 as production
 
 ### Set working directory
 WORKDIR /app
