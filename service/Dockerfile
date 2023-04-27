@@ -1,5 +1,4 @@
 ######### Go Builder
-
 FROM golang:1.20 as builder
 
 # Working directory
@@ -14,7 +13,8 @@ COPY . /app
 RUN go build -o vivo-service .
 
 ######## Fluent Bit
-FROM fluent/fluent-bit:2.1.2 as production
+ARG FLUENT_BIT_VERSION=2.1.2
+FROM fluent/fluent-bit:$FLUENT_BIT_VERSION as production
 
 ### Set working directory
 WORKDIR /app
