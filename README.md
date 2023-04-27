@@ -35,10 +35,10 @@ The following end-points will be available:
 These are provided on the `calyptia-vivo` service created by the deployment or locally if running in podman.
 Port forwarding can be used to expose them locally.
 
-To access the UI:
+To access the UI (make sure to forward the 2025 port otherwise it fails to connect via localhost to it):
 
 ```shell
-kubectl port-forward svc/calyptia-vivo 8000:8000
+kubectl port-forward svc/calyptia-vivo 8000:8000 2025:2025
 ```
 
 You can access the Web interface by using the following address: <http://127.0.0.1:8000>
