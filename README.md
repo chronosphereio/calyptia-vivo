@@ -2,7 +2,7 @@
 
 [Vivo](https://github.com/calyptia/vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
 
-![](docs/hello_calyptia.png)
+![Screenshot of the UI](docs/hello_calyptia.png)
 
 ## Why a rewrite ?
 
@@ -51,7 +51,7 @@ After a successful start, the following end-points will be available:
 
 Let's use `curl`:
 
-```
+```shell
 curl -XPOST -H "Content-Type: application/json" -d '{"hello": "Calyptia!"}' http://127.0.0.1:9010
 ```
 
