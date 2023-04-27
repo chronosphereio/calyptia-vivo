@@ -48,7 +48,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.container }}
+          images: ghcr.io/${{ github.repository }}/${{ matrix.container }}
           # Ensure we strip any 'v' prefix, provide a SHA and a latest tag only for default branch (master)
           tags: |
             type=semver,pattern={{version}},event=tag
@@ -90,7 +90,8 @@ jobs:
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|ghcr.io/calyptia/vivo|ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-dev.yaml
+          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
           cat ./vivo-deployment.yaml
           kubectl apply -f ./vivo-deployment.yaml
         shell: bash
