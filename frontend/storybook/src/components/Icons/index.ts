@@ -20,7 +20,6 @@ import MySqlIcon from './mysql-icon.svg';
 import NginxIcon from './nginx-icon.svg';
 import SyslogIcon from './syslog-icon.svg';
 import VirtualMachineIcon from './virtual-machine-icon.svg';
-import VivoIcon from './vivo-logo.svg';
 
 export const CALYPTIA_CLI_ICON = CalyptiaCliIcon;
 export const FLUENTBIT_ICON = FluentBitIcon;
@@ -43,5 +42,4 @@ export const MYSQL_ICON = MySqlIcon;
 export const NGINX_ICON = NginxIcon;
 export const SYSLOG_ICON = SyslogIcon;
 export const CALYPTIA_LOGO_NAME = CalyptiaLogoName;
-export const VIVO_LOGO = VivoIcon;
 export const CALYPTIA_VIVO_ICON = CalyptiaVivoIcon;

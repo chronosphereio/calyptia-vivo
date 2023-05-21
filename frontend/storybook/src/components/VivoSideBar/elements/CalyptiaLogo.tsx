@@ -1,4 +1,4 @@
-import { destructureSrcFromLogo } from '@/assets/utils';
+import { destructureSrcFromLogo } from './utils';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Box, Button, Stack, Typography } from '@mui/material';
 
