@@ -9,12 +9,14 @@ export interface VivoSideBarProps {
 }
 
 const VivoSideBar = ({ menuActionHandler, learnHowActionHandler, active }: VivoSideBarProps) => {
-  return (
+  return (  
     <Stack direction="column" sx={VIVO_SIDEBAR_STYLE}>
+      <span>Hi</span>
       <VivoLogo />
       <HorizontalRule />
       <VivoMenu active={active} clickHandler={menuActionHandler} />
       <CalyptiaLogo clickHandler={learnHowActionHandler} />
+
     </Stack>
   );
 };

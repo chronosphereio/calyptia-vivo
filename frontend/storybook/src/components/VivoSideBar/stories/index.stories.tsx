@@ -1,19 +1,17 @@
-import VivoSideBar from '..';
-import type { StoryFn, Meta} from '@storybook/react';
+import VivoSideBar from '../';
 
-const Template: StoryFn<typeof VivoSideBar> = (args: Parameters<typeof VivoSideBar>[0]) => (
-  <VivoSideBar {...args} />
-);
-
-export const Primary = Template.bind({});
-
-Primary.args = {};
-
-const story = {
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
+export default {
   title: 'Components/VivoSideBar',
   component: VivoSideBar,
-
+  tags: ['autodocs'],
   argTypes: {},
-} as Meta<typeof VivoSideBar>;
+};
 
-export default story;
+// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+export const Primary = {  
+  args: {
+    menuActionHandler: () => {}, 
+    learnHowActionHandler: () => {}, 
+    active: 'logs'
+},};
