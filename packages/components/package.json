@@ -1,0 +1,46 @@
+{
+    "name": "@vivo/components",
+    "version": "0.0.0",
+    "private": false,
+    "dependencies": {
+        "@codemirror/lang-json": "^6.0.1",
+        "@codemirror/legacy-modes": "codemirror/legacy-modes",
+        "@mui/icons-material": "^5.11.11",
+        "@mui/lab": "^5.0.0-alpha.124",
+        "@mui/material": "^5.11.15",
+        "@types/node": "18.15.11",
+        "@types/react": "18.0.32",
+        "@types/react-dom": "18.0.11",
+        "@uiw/react-codemirror": "^4.19.16",
+        "codemirror": "^6.0.1",
+        "eslint": "8.37.0",
+        "eslint-config-next": "13.2.4",
+        "uiw": "^4.21.25"
+      },
+      "devDependencies": {
+        "@emotion/react": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@babel/core": "^7.21.8",
+        "@mui/icons-material": "^5.11.11",
+        "@mui/lab": "^5.0.0-alpha.124",
+        "@mui/material": "^5.11.15",
+        "@storybook/addon-essentials": "^7.0.18",
+        "@storybook/addon-interactions": "^7.0.18",
+        "@storybook/addon-links": "^7.0.18",
+        "@storybook/blocks": "^7.0.18",
+        "@storybook/nextjs": "^7.0.18",
+        "@storybook/react": "^7.0.18",
+        "@storybook/testing-library": "^0.1.0",
+        "next": "13.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "storybook": "^7.0.18",
+        "typescript": "^5.0.4",
+        "webpack": "^5.0.0"
+    },
+    "scripts": {
+      "storybook": "storybook dev -p 6006",
+      "build-storybook": "storybook build"
+    }        
+  }
+  
