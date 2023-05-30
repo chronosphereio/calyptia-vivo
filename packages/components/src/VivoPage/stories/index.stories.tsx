@@ -1,4 +1,4 @@
-import VivoPage from '@vivo/components/VivoPage';
+import VivoPage from '@calyptia-vivo/components/VivoPage';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {

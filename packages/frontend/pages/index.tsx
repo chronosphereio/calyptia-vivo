@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import useFluentBitStream, { StreamKind } from '../hooks/useFluentBitStream';
-import VivoPage from '@vivo/components/VivoPage';
+import { VivoPage } from '@calyptia-vivo/components';
 
 const Home: NextPage = () => {
   const [kind, setKind] = useState<StreamKind>('logs');
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
         setTracesActive(true);
         break;
     }
-  }, [kind])
+  }, [kind, setLogsActive, setMetricsActive, setTracesActive])
 
   useEffect(() => {
     let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
@@ -80,7 +80,7 @@ const Home: NextPage = () => {
     setStartRecord(start+1)
     setData(selectedData)
     setActiveType(kind)
-  }, [kind, logs, metrics, traces, rowsPerPage, page])
+  }, [kind, logs, metrics, traces, rowsPerPage, page, eventFilter, metadataFilter])
 
   const filterActionHandler = (target: string, field:string) => {
     field === 'metadata' ? setMetadataFilter(target) : setEventFilter(target)

@@ -1,4 +1,4 @@
-import VivoSideBar from '@vivo/components/VivoSideBar';
+import VivoSideBar from '@calyptia-vivo/components/VivoSideBar';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {

@@ -3,9 +3,12 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@vivo/components": ["*"],
-            "@vivo/components/*": ["src/*"]
-        }
-    }
+            "@calyptia-vivo/components": ["*"],
+            "@calyptia-vivo/components/*": ["src/*"]
+        },
+        "outDir": "./lib",
+        "rootDir": "./src"
+    },
+    "include": ["additional.d.ts"]
 }
   

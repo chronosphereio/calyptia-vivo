@@ -91,11 +91,11 @@ Vivo-Stream-End-ID: 1
 
 To run a local version of storybook, use the following command:
 
-`yarn workspace @vivo/components storybook`
+`yarn workspace @calyptia-vivo/components storybook`
 
 To run a local version of the frontend, use the following command:
 
-`yarn workspace @vivo/frontend start`
+`yarn workspace @calyptia-vivo/frontend start`
 
 ## Known Issues or fixes needed
 

@@ -1,7 +1,7 @@
-import { destructureSrcFromLogo } from '@vivo/components/utils';
+import { destructureSrcFromLogo } from '@calyptia-vivo/components/utils';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { CALYPTIA_VIVO_ICON } from '@vivo/components/Icons';
+import { CALYPTIA_VIVO_ICON } from '@calyptia-vivo/components/Icons';
 import { CALYPTIA_LOGO_STYLES } from '../constants';
 
 interface CalyptiaLogoProps {

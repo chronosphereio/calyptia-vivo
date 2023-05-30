@@ -15,7 +15,6 @@ export interface LogEventProps {
 
 const formatTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
-  const hours = date.getHours();
   const formatTime = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
   const formatDate = date.toLocaleString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit'})
   return `${formatDate} | ${formatTime}`

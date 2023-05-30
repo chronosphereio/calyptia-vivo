@@ -10,7 +10,7 @@ services:
       - "2025:2025"
   frontend:
     build:
-      context: ./frontend
+      context: ./packages/frontend
       dockerfile: Dockerfile
     ports:
       - "8000:3000"
