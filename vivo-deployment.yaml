@@ -83,7 +83,7 @@ spec:
           name: frontend
           ports:
             - name: ui 
-              containerPort: 8000
+              containerPort: 3000
           readinessProbe:
             httpGet:
               path: /
