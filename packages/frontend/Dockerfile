@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN apk add --no-cache git openssh
+RUN apk add --no-cache git==2.38.5-r0 openssh==9.1_p1-r3
 RUN yarn install
 # Build the app
 RUN yarn next build && yarn next export

@@ -93,9 +93,19 @@ To run a local version of storybook, use the following command:
 
 `yarn workspace @calyptia-vivo/components storybook`
 
+To build components as a distributable package:
+
+`yarn workspace @calyptia-vivo/components build`
+
+Then 
+
+`yarn workspace @calyptia-vivo/components publish`
+
 To run a local version of the frontend, use the following command:
 
 `yarn workspace @calyptia-vivo/frontend start`
+
+If you wish to test out your local development of the `components` package before publishing, use the `yarn link` command [See this guide on yarn link](https://classic.yarnpkg.com/lang/en/docs/cli/link/)
 
 ## Known Issues or fixes needed
 
