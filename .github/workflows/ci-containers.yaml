@@ -27,7 +27,7 @@ jobs:
       matrix: 
         container:
           - service
-          - frontend
+          - packages/frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
