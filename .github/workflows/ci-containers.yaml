@@ -61,7 +61,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build the service image
-        id: docker_build
+        id: docker_build_backend
         uses: docker/build-push-action@v4
         with:
           context: service
@@ -73,7 +73,7 @@ jobs:
           target: production
 
       - name: Build the frontend image
-        id: docker_build
+        id: docker_build_frontend
         uses: docker/build-push-action@v4
         with:
           context: packages/frontend
