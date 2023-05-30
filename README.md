@@ -97,7 +97,7 @@ To build components as a distributable package:
 
 `yarn workspace @calyptia-vivo/components build`
 
-Then 
+Then
 
 `yarn workspace @calyptia-vivo/components publish`
 
