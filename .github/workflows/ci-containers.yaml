@@ -27,7 +27,7 @@ jobs:
       matrix: 
         container:
           - service
-          - packages/frontend
+          - frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -60,11 +60,23 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Build the ${{ matrix.container }} image
+      - name: Build the service image
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.container }}
+          context: service
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          push: true
+          load: false
+          target: production
+
+      - name: Build the frontend image
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: packages/frontend
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
