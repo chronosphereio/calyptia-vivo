@@ -1,4 +1,4 @@
-import { VERTICAL_RULE_STYLE } from '../constants';
+import { VERTICAL_RULE_STYLE } from '@calyptia-vivo/components/VivoFilterBar/constants';
 import { Stack } from '@mui/material';
 
 const VerticalRule = () => {

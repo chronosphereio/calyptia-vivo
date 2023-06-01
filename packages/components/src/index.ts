@@ -1,8 +1,8 @@
-import VivoSideBar from "./VivoSideBar";
-import VivoPaginator from "./VivoPaginator";
-import VivoPage from "./VivoPage";
-import VivoLogTable from "./VivoLogTable";
-import VivoFilterBar from "./VivoFilterBar";
+import VivoSideBar from "@calyptia-vivo/components/VivoSideBar";
+import VivoPaginator from "@calyptia-vivo/components/VivoPaginator";
+import VivoPage from "@calyptia-vivo/components/VivoPage";
+import VivoLogTable from "@calyptia-vivo/components/VivoLogTable";
+import VivoFilterBar from "@calyptia-vivo/components/VivoFilterBar";
 
 export {
     VivoSideBar,

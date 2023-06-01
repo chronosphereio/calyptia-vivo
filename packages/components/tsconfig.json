@@ -6,9 +6,9 @@
             "@calyptia-vivo/components": ["*"],
             "@calyptia-vivo/components/*": ["src/*"]
         },
-        "outDir": "./lib",
-        "rootDir": "./src"
+        "outDir": "lib",
+        "rootDir": "src"
     },
-    "include": ["additional.d.ts"]
+    "include": ["additional.d.ts", "src/**/*"]
 }
   

@@ -1,7 +1,7 @@
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Box, TextField } from '@mui/material';
 
-import { INPUT_STYLE, SEARCH_ICON } from '../constants';
+import { INPUT_STYLE, SEARCH_ICON } from '@calyptia-vivo/components/VivoFilterBar/constants';
 
 export interface InputFilterProps {
   label: string;

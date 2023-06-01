@@ -1,4 +1,4 @@
-import { Header, LogEvent } from './elements';
+import { Header, LogEvent } from '@calyptia-vivo/components/VivoLogTable/elements';
 import { Box } from '@mui/material';
 import List from "@mui/material/List"
 

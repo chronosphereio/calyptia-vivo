@@ -1,7 +1,7 @@
-import { PageSelector, RecordsDisplay, RecordsSelector } from './elements';
+import { PageSelector, RecordsDisplay, RecordsSelector } from '@calyptia-vivo/components/VivoPaginator/elements';
 import { Stack } from '@mui/material';
 
-import { PAGINATOR_STYLE } from './constants';
+import { PAGINATOR_STYLE } from '@calyptia-vivo/components/VivoPaginator/constants';
 
 export interface VivoPaginatorProps {
   recordStart: string;

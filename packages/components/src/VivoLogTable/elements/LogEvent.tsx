@@ -1,9 +1,9 @@
-import { CodeBoxCM } from './CodeBoxCM';
+import { CodeBoxCM } from '@calyptia-vivo/components/VivoLogTable/elements';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import { Box, Collapse, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { LOG_DETAIL_PANEL, LOG_EVENT_BOX_STYLE, LOG_EVENT_ROW_STYLE } from '../constants';
+import { LOG_DETAIL_PANEL, LOG_EVENT_BOX_STYLE, LOG_EVENT_ROW_STYLE } from '@calyptia-vivo/components/VivoLogTable/constants';
 
 export interface LogEventProps {
   timestamp?: number;

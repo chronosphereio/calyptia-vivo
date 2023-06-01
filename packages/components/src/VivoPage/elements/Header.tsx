@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { HEADER_STYLES } from '../constants';
+import { HEADER_STYLES } from '@calyptia-vivo/components/VivoPage/constants';
 
 export interface HeaderProps {
   kind: string;
@@ -32,4 +32,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export { Header };

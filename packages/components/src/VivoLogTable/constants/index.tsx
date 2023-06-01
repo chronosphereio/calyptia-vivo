@@ -1,4 +1,4 @@
-import { CODEBOX_BACKGROUND_COLOR, SELECTED_COLOR, THEME } from '../../theme';
+import { CODEBOX_BACKGROUND_COLOR, SELECTED_COLOR, THEME } from '@calyptia-vivo/components/theme';
 import type { Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 

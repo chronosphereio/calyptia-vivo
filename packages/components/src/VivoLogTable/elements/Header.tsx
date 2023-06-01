@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 
-import { HEADER_STYLES } from '../constants';
+import { HEADER_STYLES } from '@calyptia-vivo/components/VivoLogTable/constants';
 
 export interface HeaderProps {
   headings: string[];

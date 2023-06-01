@@ -1,11 +1,11 @@
 import { Box, Stack } from '@mui/material';
 
-import VivoFilterBar from '../VivoFilterBar';
-import VivoLogTable from '../VivoLogTable';
-import VivoPaginator from '../VivoPaginator';
-import VivoSideBar from '../VivoSideBar';
-import { CONTENT_STYLES, PAGE_STYLES } from './constants';
-import Header from './elements/Header';
+import VivoFilterBar from '@calyptia-vivo/components/VivoFilterBar';
+import VivoLogTable from '@calyptia-vivo/components/VivoLogTable';
+import VivoPaginator from '@calyptia-vivo/components/VivoPaginator';
+import VivoSideBar from '@calyptia-vivo/components/VivoSideBar';
+import { CONTENT_STYLES, PAGE_STYLES } from '@calyptia-vivo/components/VivoPage/constants';
+import { Header } from '@calyptia-vivo/components/VivoPage/elements';
 
 export interface VivoPageProps {
   menuActionHandler: (target: string) => void;

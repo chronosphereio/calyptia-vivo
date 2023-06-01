@@ -1,7 +1,7 @@
 import HistoryIcon from '@mui/icons-material/History';
 import { Box, MenuItem, TextField } from '@mui/material';
 
-import { RATE_ICON, RATE_SELECT } from '../constants';
+import { RATE_ICON, RATE_SELECT } from '@calyptia-vivo/components/VivoFilterBar/constants';
 
 export interface SelectFilterProps {
   selectHandler: (value: number) => void;

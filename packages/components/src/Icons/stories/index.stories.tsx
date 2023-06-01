@@ -1,7 +1,7 @@
 
 import Box from '@mui/material/Box';
-import { CALYPTIA_DOCKER } from '..';
-import { destructureSrcFromLogo } from '../../utils';
+import { CALYPTIA_DOCKER } from '@calyptia-vivo/components/Icons';
+import { destructureSrcFromLogo } from '@calyptia-vivo/components/utils';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
