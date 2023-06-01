@@ -1,6 +1,6 @@
-import { destructureSrcFromLogo } from '../../utils';
-import { VIVO_LOGO } from './assets';
-import { VIVO_LOGO_ICON, VIVO_LOGO_STACK, VIVO_LOGO_TEXT } from '../constants';
+import { destructureSrcFromLogo } from '@calyptia-vivo/components/utils';
+import { VIVO_LOGO } from '@calyptia-vivo/components/Icons';
+import { VIVO_LOGO_ICON, VIVO_LOGO_STACK, VIVO_LOGO_TEXT } from '@calyptia-vivo/components/VivoSideBar/constants';
 import { Box, Stack, Typography } from '@mui/material';
 
 const VivoLogo = () => {
