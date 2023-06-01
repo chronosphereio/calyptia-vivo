@@ -64,7 +64,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ format('./packages/{1}',matrix.container) }}
+          context: ${{ format('./packages/{0}',matrix.container) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
@@ -187,7 +187,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ format('./packages/{1}',matrix.container) }}
+          context: ${{ format('./packages/{0}',matrix.container) }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
