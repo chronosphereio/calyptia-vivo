@@ -16,7 +16,7 @@ jobs:
   build-container-images: 
     outputs:
       service-digest: ${{ steps.outputs_service.outputs.service-digest }}
-      frontend-digest: ${{ steps.outputs_frtonend.outputs.frontend-digest }}
+      frontend-digest: ${{ steps.outputs_frontend.outputs.frontend-digest }}
     permissions:
       contents: read
       packages: write
