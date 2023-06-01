@@ -84,14 +84,24 @@ jobs:
           load: false
           target: production
 
-      - name: ${{ matrix.container }} digests
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: service digests
+        run: echo ${{ steps.docker_build_service.outputs.digest }}
         shell: bash
 
-      - name: Set up outputs
-        id: outputs
+      - name: frontend digests
+        run: echo ${{ steps.docker_build_frontend.outputs.digest }}
+        shell: bash
+
+      - name: Set up service outputs
+        id: outputs_service
         run: |
-          echo "${{ matrix.container }}-digest=${{ steps.docker_build.outputs.digest }}" >> $GITHUB_OUTPUT
+          echo "service-digest=${{ steps.docker_build_service.outputs.digest }}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Set up frontend outputs
+        id: outputs_frontend
+        run: |
+          echo "frontend-digest=${{ steps.docker_build_frontend.outputs.digest }}" >> $GITHUB_OUTPUT
         shell: bash
 
   test-container-images:
@@ -113,8 +123,8 @@ jobs:
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs.service-digest }}|g' ./vivo-deployment.yaml
-          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs.frontend-digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs_service.service-digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs_frontend.frontend-digest }}|g' ./vivo-deployment.yaml
           cat ./vivo-deployment.yaml
           kubectl apply -f ./vivo-deployment.yaml
         shell: bash
