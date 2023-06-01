@@ -61,7 +61,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build the service image
-        id: docker_build_backend
+        id: docker_build_service
         uses: docker/build-push-action@v4
         with:
           context: service
