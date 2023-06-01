@@ -159,6 +159,9 @@ jobs:
       matrix: 
         container:
           - service
+          - frontend
+        contexts:
+          - service
           - packages/frontend
     steps:
       - uses: actions/checkout@v3
