@@ -15,8 +15,8 @@ on:
 jobs:
   build-container-images: 
     outputs:
-      service-digest: ${{ steps.outputs_service.outputs.service-digest }}
-      frontend-digest: ${{ steps.outputs_frontend.outputs.frontend-digest }}
+      service-digest: ${{ steps.outputs.outputs.service-digest }}
+      frontend-digest: ${{ steps.outputs.outputs.frontend-digest }}
     permissions:
       contents: read
       packages: write
@@ -63,6 +63,7 @@ jobs:
       - name: Build the service image
         id: docker_build_service
         uses: docker/build-push-action@v4
+        if: matrix.container == 'service'
         with:
           context: service
           tags: ${{ steps.meta.outputs.tags }}
@@ -71,9 +72,10 @@ jobs:
           push: true
           load: false
           target: production
-
+        
       - name: Build the frontend image
         id: docker_build_frontend
+        if: matrix.container == 'frontend'
         uses: docker/build-push-action@v4
         with:
           context: packages/frontend
@@ -84,24 +86,14 @@ jobs:
           load: false
           target: production
 
-      - name: service digests
-        run: echo ${{ steps.docker_build_service.outputs.digest }}
+      - name: ${{ matrix.container }} digests
+        run: echo ${{ format(steps.docker_build_{1}.outputs.digest, matrix.container }}
         shell: bash
 
-      - name: frontend digests
-        run: echo ${{ steps.docker_build_frontend.outputs.digest }}
-        shell: bash
-
-      - name: Set up service outputs
-        id: outputs_service
+      - name: Set up outputs
+        id: outputs
         run: |
-          echo "service-digest=${{ steps.docker_build_service.outputs.digest }}" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Set up frontend outputs
-        id: outputs_frontend
-        run: |
-          echo "frontend-digest=${{ steps.docker_build_frontend.outputs.digest }}" >> $GITHUB_OUTPUT
+          echo "${{ matrix.container }}-digest=${{ format(steps.docker_build_{1}.outputs.digest, matrix.container }}" >> $GITHUB_OUTPUT
         shell: bash
 
   test-container-images:
@@ -178,7 +170,7 @@ jobs:
       matrix: 
         container:
           - service
-          - packages/frontend
+          - frontend
     steps:
       - uses: actions/checkout@v3
 
@@ -205,11 +197,24 @@ jobs:
             type=semver,pattern={{version}}
             type=raw,value=latest
 
-      - name: Build the ${{ matrix.container }} image
-        id: docker_build
+      - name: Build the service image
+        id: docker_build_service
+        uses: docker/build-push-action@v4
+        if: matric.container == 'service'
+        with:
+          context: service
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          target: production
+
+      - name: Build the frontend image
+        id: docker_build_frontend
+        if: matric.container == 'frontend'
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.container }}
+          context: frontend
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
@@ -217,14 +222,14 @@ jobs:
           target: production
 
       - name: Images digests
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo ${{ format(steps.docker_build_{1}.outputs.digest, matrix.container) }}
         shell: bash
 
       - uses: sigstore/cosign-installer@main
       - name: Sign Container Image
         continue-on-error: true
         run: |
-          cosign sign --force --yes calyptia/vivo-${{ matrix.container }}@${{ steps.docker_build.outputs.digest }}
+          cosign sign --force --yes calyptia/vivo-${{ matrix.container }}@${{ format(steps.docker_build_{1}.outputs.digest, matrix.container) }}
         shell: bash
 
   release-on-tag:
