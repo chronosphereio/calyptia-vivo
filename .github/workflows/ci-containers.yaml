@@ -15,8 +15,8 @@ on:
 jobs:
   build-container-images: 
     outputs:
-      service-digest: ${{ steps.outputs.outputs.service-digest }}
-      frontend-digest: ${{ steps.outputs.outputs.frontend-digest }}
+      service-digest: ${{ steps.outputs.outputs_service.service-digest }}
+      frontend-digest: ${{ steps.outputs.outputs_frontend.frontend-digest }}
     permissions:
       contents: read
       packages: write
@@ -123,8 +123,8 @@ jobs:
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs_service.service-digest }}|g' ./vivo-deployment.yaml
-          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs_frontend.frontend-digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-service|image: ghcr.io/calyptia/vivo/service@${{ needs.build-container-images.outputs.service-digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo-frontend|image: ghcr.io/calyptia/vivo/frontend@${{ needs.build-container-images.outputs.frontend-digest }}|g' ./vivo-deployment.yaml
           cat ./vivo-deployment.yaml
           kubectl apply -f ./vivo-deployment.yaml
         shell: bash
