@@ -2,7 +2,7 @@ version: '3'
 services:
   service:
     build:
-      context: service
+      context: ./packages/service
       dockerfile: Dockerfile
     ports:
       - "9000:24224"

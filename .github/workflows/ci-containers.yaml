@@ -28,9 +28,6 @@ jobs:
         container:
           - service
           - frontend
-        contexts:
-          - service
-          - packages/frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -67,7 +64,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.contexts }}
+          context: ${{ format("./packages/{1}",matrix.container) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
@@ -160,9 +157,6 @@ jobs:
         container:
           - service
           - frontend
-        contexts:
-          - service
-          - packages/frontend
     steps:
       - uses: actions/checkout@v3
 
@@ -193,7 +187,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.contexts }}
+          context: ${{ format("./packages/{1}",matrix.container) }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
