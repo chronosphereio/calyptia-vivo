@@ -7,7 +7,7 @@ hello_calyptia.png)
 
 The following components are used in Vivo:
 
-- [component] [service/](./service): Golang service that starts/manages Fluent Bit
+- [component] [packages/service](./packages/service): Golang service that starts/manages Fluent Bit
 - [component] [packages/components](./packages/components): Components that can be demonstrated using Storybook
 - [component] [packages/frontend](./packages/frontend): Frontend React App that pulls telemetry data from Fluent Bit (new approach) and imports components from the components package.
 - [component] Fluent Bit: telemetry agent with new export/streaming capabilities
