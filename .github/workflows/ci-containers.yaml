@@ -200,7 +200,7 @@ jobs:
       - name: Build the service image
         id: docker_build_service
         uses: docker/build-push-action@v4
-        if: matric.container == 'service'
+        if: matrix.container == 'service'
         with:
           context: service
           tags: ${{ steps.docker_meta.outputs.tags }}
@@ -211,7 +211,7 @@ jobs:
 
       - name: Build the frontend image
         id: docker_build_frontend
-        if: matric.container == 'frontend'
+        if: matrix.container == 'frontend'
         uses: docker/build-push-action@v4
         with:
           context: frontend
