@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies, build
-        run: yarn install && yarn workspace @calyptia-vivo/components build
+        run: yarn workspace @calyptia-vivo/components install && yarn workspace @calyptia-vivo/components build
       - name: Publish master
         run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
