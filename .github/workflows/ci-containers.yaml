@@ -14,6 +14,8 @@ on:
 
 jobs:
   build-container-images: 
+    needs: 
+      - npm-publish
     outputs:
       service-digest: ${{ steps.outputs.outputs.service-digest }}
       frontend-digest: ${{ steps.outputs.outputs.frontend-digest }}
