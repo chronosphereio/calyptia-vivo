@@ -1,6 +1,6 @@
 {
   "name": "@calyptia-vivo/components",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": false,
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
@@ -60,6 +60,8 @@
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "rollup -c --bundleConfigAsCjs"
+    "build": "rollup -c --bundleConfigAsCjs",
+    "preversion": "#yarn test",
+    "postversion": "git push --tags && yarn publish ./lib --access public --tag $npm_package_version && git push && echo \"Successfully released version $npm_package_version!\""
   }
 }
