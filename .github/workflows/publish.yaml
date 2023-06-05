@@ -23,15 +23,15 @@ jobs:
       - name: Install dependencies, build
         run: yarn workspace @calyptia-vivo/components install && yarn workspace @calyptia-vivo/components build
       - name: Publish master
+        if: ${{ github.event.issue.pull_request == false }} 
         run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}        
-        if: github.event.issue.pull_request == false
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}                
       - name: Publish staging    
         run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        if: github.event.issue.pull_request
+        if: ${{ github.event.issue.pull_request }}
       - name: Commit package update
         run: 
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}" && git config --global user.email "ci@calyptia.com" && git commit -a -m "Components Version Updated && git push
