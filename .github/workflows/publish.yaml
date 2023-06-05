@@ -11,10 +11,8 @@ on:
     types:
       - closed
   push:
-    branches:
-      - '*'
-      - '**'
-      - '!master'
+    branches-ignore:
+      - 'master'
 
 # List of jobs
 jobs:
@@ -26,6 +24,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies, build
         run: yarn workspace @calyptia-vivo/components install && yarn workspace @calyptia-vivo/components build
+      - name: Configure git
+        run: git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}" && git config --global user.email "ci@calyptia.com" 
       - name: Publish master
         if: ${{ github.event_name != 'push' && github.event.pull_request.merged == true }} 
         run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
@@ -38,6 +38,6 @@ jobs:
         if: ${{ github.event_name == 'push' && github.event.pull_request.merged == false }}
       - name: Commit package update
         run: 
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}" && git config --global user.email "ci@calyptia.com" && git commit -a -m "Components Version Updated && git push
+          git commit -a -m "Components Version Updated && git push
         env: 
           CI_COMMIT_AUTHOR: 'Continuous Integration'
