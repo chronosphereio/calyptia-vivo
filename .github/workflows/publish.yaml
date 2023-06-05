@@ -13,6 +13,7 @@ on:
   push:
     branches:
       - '*'
+      - '**'
       - '!master'
 
 # List of jobs
