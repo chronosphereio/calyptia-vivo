@@ -15,8 +15,6 @@ on:
 # List of jobs
 jobs:
   npm-publish:
-    needs: 
-      - pr-lint
     # Operating System
     runs-on: ubuntu-latest
     # Job steps
