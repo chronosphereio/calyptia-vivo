@@ -33,10 +33,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         if: github.event.issue.pull_request
       - name: Commit package update
-        run: &&
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email "ci@calyptia.com"
-          git commit -a -m "Components Version Updated"
-          git push
+        run: 
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}" && git config --global user.email "ci@calyptia.com" && git commit -a -m "Components Version Updated && git push
         env: 
           CI_COMMIT_AUTHOR: 'Continuous Integration'
