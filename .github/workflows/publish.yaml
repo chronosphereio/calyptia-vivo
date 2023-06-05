@@ -5,9 +5,11 @@ name: 'Publish Component Library'
 
 # Event for the workflow
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - master
+    types:
+      - closed
   push:
     branches:
       - master
@@ -23,7 +25,7 @@ jobs:
       - name: Install dependencies, build
         run: yarn workspace @calyptia-vivo/components install && yarn workspace @calyptia-vivo/components build
       - name: Publish master
-        if: ${{ github.event.issue.pull_request == false }} 
+        if: ${{ github.event_name == 'push' || github.event.pull_request.merged == true }} 
         run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}                
@@ -31,7 +33,7 @@ jobs:
         run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        if: ${{ github.event.issue.pull_request }}
+        if: ${{ github.event_name != 'push' && github.event.pull_request.merged == false }}
       - name: Commit package update
         run: 
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}" && git config --global user.email "ci@calyptia.com" && git commit -a -m "Components Version Updated && git push
