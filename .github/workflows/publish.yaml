@@ -1,0 +1,48 @@
+# .github/workflows/chromatic.yml
+
+# Workflow name
+name: 'Publish Component Library'
+
+# Event for the workflow
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+# List of jobs
+jobs:
+  npm-publish:
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies, build
+        run: |
+          yarn install
+          yarn workspace @calyptia-vivo/components build
+      - name: Publish master
+        run: |
+          yarn workspace @calyptia-vivo/components version --patch
+          yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}        
+        if: github.event.issue.pull_request == false
+      - name: Publish staging    
+        run: |
+          yarn workspace @calyptia-vivo/components version --prerelease
+          yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        if: github.event.issue.pull_request
+      - name: Commit package update
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "ci@calyptia.com"
+          git commit -a -m "Components Version Updated"
+          git push
+        env: 
+          CI_COMMIT_AUTHOR: 'Continuous Integration'
