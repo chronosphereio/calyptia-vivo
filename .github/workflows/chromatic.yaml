@@ -33,3 +33,4 @@ jobs:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitZeroOnChanges: true # 👈 Option to prevent the workflow from failing
+          buildScriptName: 'yarn workspace @calyptia-vivo/components build-storybook'
