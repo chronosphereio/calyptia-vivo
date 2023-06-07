@@ -1,0 +1,27 @@
+{
+    "name": "vivo",
+    "version": "1.0.0",
+    "description": "Vivo streaming logs",
+    "main": "index.ts",
+    "repository": "git@github.com:calyptia/vivo.git",
+    "author": "Calyptia <info@calyptia.com>",
+    "private": true,
+    "packageManager": "yarn@3.2.2",
+    "engines": {
+      "node": "18.16.x"
+    },
+    "prettier": {},
+    "eslintConfig": {},
+    "workspaces": [
+      "packages/*"
+    ],
+    "scripts": {
+      "storybook:build": "yarn workspace @calyptia-vivo/components/storybook build-storybook",
+      "storybook:run": "yarn workspace @calyptia-vivo/components/storybook storybook"
+    },
+    "devDependencies": {
+    },
+    "dependencies": {
+    }
+  }
+  
