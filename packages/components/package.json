@@ -52,7 +52,7 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "storybook": "^7.0.18",
     "typescript": "^5.0.4",
-    "webpack": "^5.0.0"
+    "webpack": "^5.86.0"
   },
   "peerDependencies": {
     "react": "^18.2.0"
