@@ -1,6 +1,6 @@
 import { destructureSrcFromLogo } from '@calyptia-vivo/components/utils';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import { CALYPTIA_VIVO_ICON } from '@calyptia-vivo/components/Icons';
 import { CALYPTIA_LOGO_STYLES } from '@calyptia-vivo/components/VivoSideBar/constants';
 
@@ -19,8 +19,7 @@ const CalyptiaLogo = ({ clickHandler }: CalyptiaLogoProps) => {
           Learn How
         </Button>
       </Box>
-      <Typography className={'powered-by'}>Powered by Calyptia</Typography>
-      <Box component="img" alt="Powered By Calyptia" src={destructureSrcFromLogo(CALYPTIA_VIVO_ICON)} />
+      <Typography className={'powered-by'}>Powered by <Link onClick={() => window.open('https://calyptia.com')} target="_blank">Calyptia</Link></Typography>      
     </Stack>
   );
 };
