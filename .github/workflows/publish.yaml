@@ -30,11 +30,11 @@ jobs:
         if: ${{ github.event_name != 'push' && github.event.pull_request.merged == true }} 
         run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}                
+          NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}                
       - name: Publish staging    
         run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}
         if: ${{ github.event_name == 'push' && github.event.pull_request.merged == false }}
       - name: Commit package update
         run: 
