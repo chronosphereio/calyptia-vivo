@@ -20,7 +20,7 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.32",
     "@types/react-dom": "18.0.11",
-    "@uiw/react-codemirror": "^4.19.16",
+    "@uiw/react-codemirror": "^4.21.2",
     "codemirror": "^6.0.1",
     "cross-env": "^7.0.3",
     "eslint": "8.37.0",
