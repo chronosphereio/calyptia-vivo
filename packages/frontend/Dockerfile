@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN apk add --no-cache git==2.38.5-r0 openssh==9.1_p1-r3 && yarn install && yarn next build && yarn next export
+RUN apk add --no-cache git==2.40.1-r0 openssh==9.3_p1-r3 && yarn install && yarn next build && yarn next export
 
 # Bundle static assets with nginx
 FROM nginx:1.21.0-alpine as production
