@@ -64,6 +64,5 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "chromatic": "chromatic"
   },
-  "readme": "ERROR: No README data found!",
   "_id": "@calyptia-vivo/components@0.0.4"
 }
