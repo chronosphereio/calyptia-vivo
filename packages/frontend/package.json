@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@calyptia-vivo/components": "^0.0.3",
+    "@calyptia-vivo/components": "^0.0.4",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/legacy-modes": "codemirror/legacy-modes",
     "@mui/icons-material": "^5.11.11",

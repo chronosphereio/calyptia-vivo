@@ -28,11 +28,11 @@ jobs:
         run: git config --global user.name "Continuous Integration" && git config --global user.email "ci@calyptia.com"         
       - name: Publish master
         if: ${{ github.event_name != 'push' && github.event.pull_request.merged == true }} 
-        run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
+        run: yarn workspace @calyptia-vivo/components version --patch && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components@$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}                
       - name: Publish staging    
-        run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components=$npm_package_version
+        run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components@$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}
         if: ${{ github.event_name == 'push' && github.event.pull_request.merged == false }}
