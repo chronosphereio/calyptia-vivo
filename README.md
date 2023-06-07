@@ -1,15 +1,15 @@
 # Vivo
 
 [Vivo](https://github.com/calyptia/vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
-
-![Screenshot of the UI](docs/hello_calyptia.png)
+hello_calyptia.png)
 
 ## Architecture
 
 The following components are used in Vivo:
 
-- [component] [service/](./service): Golang service that starts/manages Fluent Bit
-- [component] [frontend/](./frontend): Frontend React App that pulls telemetry data from Fluent Bit (new approach)
+- [component] [packages/service](./packages/service): Golang service that starts/manages Fluent Bit
+- [component] [packages/components](./packages/components): Components that can be demonstrated using Storybook
+- [component] [packages/frontend](./packages/frontend): Frontend React App that pulls telemetry data from Fluent Bit (new approach) and imports components from the components package.
 - [component] Fluent Bit: telemetry agent with new export/streaming capabilities
 
 To simplify the data management per type, Fluent Bit now supports a new output plugin called [Vivo Exporter](https://docs.fluentbit.io/manual/v/dev-2.1/pipeline/outputs/vivo-exporter).
@@ -86,6 +86,26 @@ Vivo-Stream-End-ID: 1
 
 [[1682605659450986675,{"_tag":"http.1"}],{"hello":"Calyptia!"}]
 ```
+
+## Development
+
+To run a local version of storybook, use the following command:
+
+`yarn workspace @calyptia-vivo/components storybook`
+
+To build components as a distributable package:
+
+`yarn workspace @calyptia-vivo/components build`
+
+Then
+
+`yarn workspace @calyptia-vivo/components publish`
+
+To run a local version of the frontend, use the following command:
+
+`yarn workspace @calyptia-vivo/frontend start`
+
+If you wish to test out your local development of the `components` package before publishing, use the `yarn link` command [See this guide on yarn link](https://classic.yarnpkg.com/lang/en/docs/cli/link/)
 
 ## Known Issues or fixes needed
 
