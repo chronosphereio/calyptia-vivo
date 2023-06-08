@@ -1,4 +1,5 @@
-Fixes: #ISSUE_NUMBER
+Fixes:
+- [ASANA Ticket Title](https://app.asana.com/0/1203769814255679/board)
 
 ## Description of changes
 
@@ -16,10 +17,3 @@ If there's things code reviewers should know about how you have structured your 
 
 If you don't know who should review your code, start with the recommended reviewers in Github.
 -->
-
-## Notes for testing
-
-TODO
-
-<!-- Provide notes on how reviewers can test your changes. For example, what are good accounts to test in, which specific links should they test from, and what
-functionality should be tested. -->
