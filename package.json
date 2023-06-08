@@ -16,8 +16,8 @@
       "packages/*"
     ],
     "scripts": {
-      "storybook:build": "yarn workspace @calyptia-vivo/components/storybook build-storybook",
-      "storybook:run": "yarn workspace @calyptia-vivo/components/storybook storybook"
+      "storybook:build": "yarn workspace @calyptia-vivo/components build-storybook",
+      "storybook:run": "yarn workspace @calyptia-vivo/components storybook"
     },
     "devDependencies": {
     },

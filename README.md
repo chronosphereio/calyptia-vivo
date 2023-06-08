@@ -93,6 +93,12 @@ To run a local version of storybook, use the following command:
 
 `yarn workspace @calyptia-vivo/components storybook`
 
+To publish storybook to Chromatic, run:
+
+`yarn workspace @calyptia-vivo/components chromatic`
+
+You must have the CHROMATIC_PROJECT_TOKEN set or specify it by adding the `--project-token` command line option.
+
 To build components as a distributable package:
 
 `yarn workspace @calyptia-vivo/components build`

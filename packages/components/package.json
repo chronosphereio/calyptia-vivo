@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
-    "@codemirror/legacy-modes": "codemirror/legacy-modes",
+    "@codemirror/legacy-modes": "github:codemirror/legacy-modes",
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.11.15",
@@ -16,6 +16,7 @@
     "@types/react": "18.0.32",
     "@types/react-dom": "18.0.11",
     "@uiw/react-codemirror": "^4.19.16",
+    "chromatic": "^6.18.0",
     "codemirror": "^6.0.1",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
@@ -62,6 +63,8 @@
     "build-storybook": "storybook build",
     "build": "rollup -c --bundleConfigAsCjs",
     "preversion": "#yarn test",
-    "postversion": "yarn build && git push --tags && yarn publish . --tag $npm_package_version --access public --non-interactive && git push && echo \"Successfully released version $npm_package_version!\""
-  }
+    "postversion": "yarn build && git push --tags && yarn publish . --tag $npm_package_version --access public --non-interactive && git push && echo \"Successfully released version $npm_package_version!\"",
+    "chromatic": "chromatic"
+  },
+  "_id": "@calyptia-vivo/components@0.0.4"
 }
