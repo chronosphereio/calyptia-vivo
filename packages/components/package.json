@@ -1,6 +1,6 @@
 {
   "name": "@calyptia-vivo/components",
-  "version": "0.0.9-3",
+  "version": "0.0.9-pr.0",
   "private": false,
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
