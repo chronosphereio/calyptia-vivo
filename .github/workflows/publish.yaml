@@ -11,12 +11,12 @@ on:
     types:
       - closed
     paths:
-      - package/components/**            
+      - packages/components/**            
   push:
     branches-ignore:
       - 'master'
     paths:
-      - package/components/**      
+      - packages/components/**      
 
 # List of jobs
 jobs:
