@@ -36,7 +36,7 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}                
       - name: Publish staging    
-        run: yarn workspace @calyptia-vivo/components version --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components@$npm_package_version
+        run: yarn workspace @calyptia-vivo/components version --preid pr --prerelease && yarn workspace @calyptia-vivo/frontend add @calyptia-vivo/components@$npm_package_version
         env:
           NPM_AUTH_TOKEN: ${{ secrets.VIVO_NPM_AUTH_TOKEN }}
         if: ${{ github.event_name == 'push' && github.event.pull_request.merged == false }}
