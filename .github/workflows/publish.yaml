@@ -10,9 +10,13 @@ on:
       - master
     types:
       - closed
+    paths:
+      - package/components/**            
   push:
     branches-ignore:
       - 'master'
+    paths:
+      - package/components/**      
 
 # List of jobs
 jobs:
