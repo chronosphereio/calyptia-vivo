@@ -23,3 +23,11 @@ export const Events = {
     learnHowActionHandler: () => {}, 
     active: 'events'
 },};
+
+// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+export const Metrics = {  
+  args: {
+    menuActionHandler: () => {}, 
+    learnHowActionHandler: () => {}, 
+    active: 'metrics'
+},};
