@@ -33,12 +33,12 @@ func (cw *customWriter) Write(p []byte) (int, error) {
 }
 
 func main() {
-  frontendStaticDir := flag.String("F", "", "Directory containing vivo frontend files")
-  flag.Parse()
+	frontendStaticDir := flag.String("F", "", "Directory containing vivo frontend files")
+	flag.Parse()
 
-  if *frontendStaticDir == "" {
-    log.Fatal("-F flag must be used to specify the vivo frontend directory")
-  }
+	if *frontendStaticDir == "" {
+		log.Fatal("-F flag must be used to specify the vivo frontend directory")
+	}
 
 	// Set up the command to run Fluent Bit
 	cmd := exec.Command("fluent-bit", "-c", "/app/fluent-bit.conf")
@@ -62,7 +62,7 @@ func main() {
 		return
 	}
 
-  go VivoListen(*frontendStaticDir)
+	go VivoListen(*frontendStaticDir)
 
 	// Set up signal handling
 	signalChan := make(chan os.Signal, 1)
@@ -121,5 +121,3 @@ func waitForFluentBitHTTP(url string, timeout time.Duration) bool {
 		time.Sleep(500 * time.Millisecond)
 	}
 }
-
-
