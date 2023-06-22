@@ -48,6 +48,9 @@ EXPOSE 9880
 # Fluent Bit webserver
 EXPOSE 2020
 
+# Fluent Bit vivo exporter
+EXPOSE 2025
+
 # Golang vivo proxy
 EXPOSE 3000
 
