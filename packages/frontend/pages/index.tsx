@@ -112,4 +112,4 @@ const Home: NextPage = () => {
 
 export default Home
 
-const VIVO_EXPORTER_URL = process.env.NEXT_VIVO_EXPORTER_URL ?? 'http://127.0.0.1:2025';
+const VIVO_EXPORTER_URL = process.env.NEXT_VIVO_EXPORTER_URL ?? '/vivo';
