@@ -49,7 +49,7 @@ EXPOSE 9880
 EXPOSE 2020
 
 # Golang vivo proxy
-EXPOSE 8080
+EXPOSE 3000
 
 ### Run the binary application
 ENV PATH="$PATH:/fluent-bit/bin/:/app/"
