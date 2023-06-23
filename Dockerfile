@@ -25,7 +25,7 @@ COPY packages/service .
 RUN go build -o vivo-service .
 
 ######## Fluent Bit
-FROM fluent/fluent-bit:2.1.2 as production
+FROM fluent/fluent-bit:2.1.6 as production
 
 ### Set working directory
 WORKDIR /app
