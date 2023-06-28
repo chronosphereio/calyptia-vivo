@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func copyHeader(dst, src http.Header) {
@@ -21,7 +22,13 @@ func notFound(w http.ResponseWriter) {
 
 func VivoListen(frontendStaticDir string, httpRootPath string) {
 	fs := http.FileServer(http.Dir(frontendStaticDir))
+
+	if strings.TrimSpace(httpRootPath) == "/" {
+		httpRootPath = ""
+	}
+
 	rootPath := httpRootPath + "/"
+
 	if rootPath[0] != '/' {
 		log.Printf(`WARN: root path "%s" doesn't start with "/". Prepending automatically`, rootPath)
 		rootPath = "/" + rootPath
