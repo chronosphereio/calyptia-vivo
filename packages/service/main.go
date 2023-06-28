@@ -34,6 +34,7 @@ func (cw *customWriter) Write(p []byte) (int, error) {
 
 func main() {
 	frontendStaticDir := flag.String("F", "", "Directory containing vivo frontend files")
+	httpRootPath := flag.String("R", "", "Root path for the http server")
 	flag.Parse()
 
 	if *frontendStaticDir == "" {
@@ -62,7 +63,7 @@ func main() {
 		return
 	}
 
-	go VivoListen(*frontendStaticDir)
+	go VivoListen(*frontendStaticDir, *httpRootPath)
 
 	// Set up signal handling
 	signalChan := make(chan os.Signal, 1)

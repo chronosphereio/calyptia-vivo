@@ -19,20 +19,25 @@ func notFound(w http.ResponseWriter) {
 	io.WriteString(w, "404 page not found")
 }
 
-func VivoListen(frontendStaticDir string) {
+func VivoListen(frontendStaticDir string, httpRootPath string) {
 	fs := http.FileServer(http.Dir(frontendStaticDir))
-	http.Handle("/", fs)
+	http.Handle(httpRootPath+"/", fs)
 
-	http.HandleFunc("/vivo/", func(w http.ResponseWriter, req *http.Request) {
+	vivoBasePath := httpRootPath + "/vivo/"
+	logsPath := vivoBasePath + "logs"
+	metricsPath := vivoBasePath + "metrics"
+	tracesPath := vivoBasePath + "traces"
+
+	http.HandleFunc(vivoBasePath, func(w http.ResponseWriter, req *http.Request) {
 		if req.Method != "GET" {
 			notFound(w)
 			return
 		}
 
 		switch req.URL.Path {
-		case "/vivo/logs":
-		case "/vivo/metrics":
-		case "/vivo/traces":
+		case logsPath:
+		case metricsPath:
+		case tracesPath:
 		default:
 			notFound(w)
 			return
