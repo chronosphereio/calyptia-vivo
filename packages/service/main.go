@@ -34,7 +34,7 @@ func (cw *customWriter) Write(p []byte) (int, error) {
 
 func main() {
 	frontendStaticDir := flag.String("F", "", "Directory containing vivo frontend files")
-	httpRootPath := flag.String("R", "", "Root path for the http server")
+	httpRootPath := flag.String("R", "", "Optional subpath for the http server")
 	flag.Parse()
 
 	if *frontendStaticDir == "" {

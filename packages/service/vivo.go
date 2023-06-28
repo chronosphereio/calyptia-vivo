@@ -20,28 +20,12 @@ func notFound(w http.ResponseWriter) {
 	io.WriteString(w, "404 page not found")
 }
 
-func VivoListen(frontendStaticDir string, httpRootPath string) {
-	fs := http.FileServer(http.Dir(frontendStaticDir))
-
-	if strings.TrimSpace(httpRootPath) == "/" {
-		httpRootPath = ""
-	}
-
-	rootPath := httpRootPath + "/"
-
-	if rootPath[0] != '/' {
-		log.Printf(`WARN: root path "%s" doesn't start with "/". Prepending automatically`, rootPath)
-		rootPath = "/" + rootPath
-	}
-
-	http.Handle(rootPath, fs)
-
-	vivoBasePath := rootPath + "/vivo/"
+func vivoHandler(vivoBasePath string) func(w http.ResponseWriter, req *http.Request) {
 	logsPath := vivoBasePath + "logs"
 	metricsPath := vivoBasePath + "metrics"
 	tracesPath := vivoBasePath + "traces"
 
-	http.HandleFunc(vivoBasePath, func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 		if req.Method != "GET" {
 			notFound(w)
 			return
@@ -73,7 +57,34 @@ func VivoListen(frontendStaticDir string, httpRootPath string) {
 		copyHeader(w.Header(), resp.Header)
 		w.WriteHeader(resp.StatusCode)
 		io.Copy(w, resp.Body)
-	})
+	}
+}
+
+func VivoListen(frontendStaticDir string, httpRootPath string) {
+	fs := http.FileServer(http.Dir(frontendStaticDir))
+
+	if strings.TrimSpace(httpRootPath) == "/" {
+		httpRootPath = ""
+	}
+
+	rootPath := httpRootPath + "/"
+
+	if rootPath[0] != '/' {
+		log.Printf(`WARN: root path "%s" doesn't start with "/". Prepending automatically`, rootPath)
+		rootPath = "/" + rootPath
+	}
+
+	vivoBasePath := rootPath + "vivo/"
+
+	http.Handle(rootPath, fs)
+	http.HandleFunc(vivoBasePath, vivoHandler(vivoBasePath))
+
+	if rootPath != "/" {
+		// also accept requests from "/"
+    log.Printf(`INFO: %s subpath was specified, but we will also accept requests from "/"`, rootPath)
+		http.Handle("/", fs)
+		http.HandleFunc("/vivo/", vivoHandler("/vivo/"))
+	}
 
 	if err := http.ListenAndServe("0.0.0.0:3000", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
