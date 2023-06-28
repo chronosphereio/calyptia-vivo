@@ -62,7 +62,7 @@ func main() {
 		return
 	}
 
-	go VivoListen(*frontendStaticDir)
+	go VivoListen(*frontendStaticDir, os.Getenv("NEXT_PUBLIC_VIVO_BASE_PATH"))
 
 	// Set up signal handling
 	signalChan := make(chan os.Signal, 1)

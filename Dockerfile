@@ -1,5 +1,8 @@
+ARG vivo_base_path=""
+
 #########
 FROM node:18-alpine as frontend-builder
+ARG vivo_base_path
 
 # Set the working directory to /app inside the container
 WORKDIR /app
@@ -7,8 +10,21 @@ WORKDIR /app
 # Copy source files
 COPY packages/frontend .
 
+ENV NEXT_PUBLIC_VIVO_BASE_PATH=${vivo_base_path}
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN apk add --no-cache git==2.40.1-r0 openssh==9.3_p1-r3 && yarn install && yarn next build && yarn next export
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+RUN \
+      apk add --no-cache git==2.40.1-r0 openssh==9.3_p1-r3 && \
+      yarn install && \
+      yarn next build && \
+      yarn next export && \
+      # There's no way to change absolute URL references in css files using next.js
+      # config, so fix with sed (any urls that start with "/" will be prefixed)
+      #
+      # A possible more robust alternative (that wasn't tested) is writing a webpack loader
+      # to perform the substituion during next.js build
+      # https://github.com/vercel/next.js/discussions/36349#discussioncomment-2614989
+      find out -name '*.css' -print0 | xargs -0 sed "s@url(/@url($NEXT_PUBLIC_VIVO_BASE_PATH/@g" -i
 
 #########
 FROM golang:1.20 as service-builder
@@ -26,6 +42,7 @@ RUN go build -o vivo-service .
 
 ######## Fluent Bit
 FROM fluent/fluent-bit:2.1.6 as production
+ARG vivo_base_path
 
 ### Set working directory
 WORKDIR /app
@@ -56,5 +73,6 @@ EXPOSE 3000
 
 ### Run the binary application
 ENV PATH="$PATH:/fluent-bit/bin/:/app/"
+ENV NEXT_PUBLIC_VIVO_BASE_PATH=${vivo_base_path}
 
 ENTRYPOINT ["/app/vivo-service", "-F", "./frontend"]
