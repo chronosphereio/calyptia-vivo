@@ -8,7 +8,7 @@ node_modules
 lib
 
 # testing
-/coverage
+coverage
 
 # next.js
 /.next/

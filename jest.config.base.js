@@ -5,7 +5,7 @@ process.env.TZ = 'UTC';
 module.exports = {
   verbose: true,
   transform: {
-    '^.+\\.(t|j)sx?$': [
+    '^.+\\.(t|j)sx?$|.+\.stories\.tsx': [
       '@swc/jest',
       {
         jsc: {
