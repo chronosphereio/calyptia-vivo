@@ -32,6 +32,6 @@
       "lib": ["dom", "dom.iterable", "esnext"]
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["**/*.ts", "**/*.tsx", "jest.config.base.js", "packages/components/jest.config.js", "jest.config.js"]
   }
   
