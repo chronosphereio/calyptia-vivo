@@ -1,4 +1,4 @@
-ARG vivo_base_path=""
+ARG vivo_base_path="/vivo"
 
 #########
 FROM node:18-alpine as frontend-builder
