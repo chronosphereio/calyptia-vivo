@@ -9,6 +9,6 @@
         "outDir": "lib",
         "rootDir": "src"
     },
-    "include": ["additional.d.ts", "src/**/*"]
+    "include": ["additional.d.ts", "src/**/*", "svgTransformer.ts"]
 }
   
