@@ -19,7 +19,7 @@ Its User Interface (UI)  has a sidebar in which three buttons are presented for 
 
 
 
-If you require inspect an specific line,  you can expand it by clicking the label with the “Open” legend that appears at the right-most place of the line you are located at.
+If you require inspecting a specific line, you can expand it by clicking the label with the “Open” legend that appears at the right-most place of the line you are located at.
 
 For example:
 ![Img 2](img/Image_2.png)
@@ -29,8 +29,7 @@ For example:
 
 #### Searching Logs, Metrics and Traces
 
-Through the UI you can search  logs, metrics and traces by typing your search term in the search boxes of the UI.
-You can search logs by metadata , event and both.The metrics and traces can be searched by event.
+Through the UI, you can search logs, metrics, and traces by typing your search term in the search boxes of the UI. You can search logs by metadata, event, and both. The metrics and traces can be searched by event.
 
 For example:
 
@@ -59,7 +58,7 @@ You can use the docker run command to start a Docker container based on the “c
  $ docker run --rm -p8000:3000 -p9000:24224 ghcr.io/calyptia/vivo vivo
 ```
 #### 2a.- Collecting CPU usage with fluent-bit and forwarding it to Vivo
-In another terminal, the following  command runs Fluent Bit with the "cpu" input plugin to collect CPU usage metrics from the local system and forwards this data to Vivo which is  running on the same machine at TCP port 9000.
+In another terminal, the following command runs Fluent Bit with the "cpu" input plugin to collect CPU usage metrics from the local system and forwards this data to Vivo, which runs on the same machine at TCP port 9000.
 
 ```bash_script
 $ fluent-bit -i cpu -o forward://127.0.0.1:9000
