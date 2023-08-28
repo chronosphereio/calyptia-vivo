@@ -9,11 +9,10 @@
 - [Where is my data sent over?](#where-is-my-data-sent-over)
 
 ## What is the value of Vivo?
-Calytptia Vivo is a live viewer for Fluent Bit streams, it  provides a visualization interface for logs, metrics, and traces.
-It supports the work to get insights into the behavior and performance of your software system by helping in understanding what is happening within your applications and infrastructure, diagnose issues, and optimize performance, allowing you to explore the events that occurred within a set of components and track the occurrence of an event to act on.
+Calytptia Vivo is a live viewer for Fluent Bit streams. It provides a visualization interface for logs, metrics, and traces. It supports the work to get insights into the behavior and performance of your software system by helping in understanding what is happening within your applications and infrastructure, diagnose issues, and optimize performance, allowing you to explore the events that occurred within a set of components and track the occurrence of an event to act on.
 
 ### User Interface Description
-Its User Interface (UI)  has a sidebar in which three buttons are presented for each telemetry data type:  Logs, Metrics and Traces. You can click on any of such buttons and get the data displayed for each data type in the central pane. Once the data is displayed,  you can browse it by using your mouse scroll button. 
+Its User Interface (UI) has a sidebar with three buttons for each telemetry data type: Logs, Metrics, and Traces. You can click on any of such controls and get the data displayed for each data type in the central pane. Once the data is displayed, browse it using your mouse scroll button.
 
 ![Img 1](img/Image_1.png)
 
@@ -47,12 +46,12 @@ Searching by  Metadata and Event
 
 
 ## How can I start using it
-A quick way to start using Vivo is by  following the next steps.
+A quick way to start using Vivo is by following the next steps.
 
 ### Using Docker
 
 #### 1.- Execute Vivo by using the  docker run command
-You can use the docker run command to start a Docker container based on the “calyptia/vivo  image, forwarding ports 8000 and 9000 from your host machine to ports 3000 and 24224 inside the container, respectively. The “vivo” application inside the container will be executed as the main process.  Once the container finishes its task. It will be automatically removed ( because the –rm flag). 
+You can execute Vivo using the docker run command to start a Docker container based on the “calyptia/vivo" image, forwarding ports 8000 and 9000 from your host machine to ports 3000 and 24224 inside the container, respectively. The “vivo” application inside the container will be executed as the main process. Once the container finishes its task, it will be automatically removed ( because of the –rm flag).
 
 ```bash_script
  $ docker run --rm -p8000:3000 -p9000:24224 ghcr.io/calyptia/vivo vivo
@@ -65,7 +64,7 @@ $ fluent-bit -i cpu -o forward://127.0.0.1:9000
 ```
 #### 2b.- Collecting CPU usage, node_exporter_metrics and event_type with fluent-bit and forwarding it to Vivo
 
-Alternatively, in another terminal, the following  command runs Fluent Bit  with  a configuration file in which the "cpu",  “node_exporter_metrics” and “event_type” input plugins are set.
+Alternatively, in another terminal, you can execute the following command that runs Fluent Bit with a configuration file in which the cpu, node_exporter_metrics, and event_type input plugins are set.
 ```bash_script
 $ fluent-bit -c fluent-bit.conf
 ```
@@ -101,7 +100,7 @@ Where the fluent-bit.conf file contains the following:
 You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://localhost:8000/vivo/
 
 ### Using Kubernetes
-#### 1.- Create the calyptia-vivo  deployment by using the kubectl create command and the vivo-deployment.yaml file.
+#### 1.- Create the calyptia-vivo deployment by using the kubectl create command and the vivo-deployment.yaml file.
 
 ```bash_script
 $ kubectl create -f vivo-deployment.yaml 
@@ -195,7 +194,7 @@ spec:
       restartPolicy: Always
 ```
 
-A service named calyptia-vivo will be created exposing the Vivo end-points.
+A service named calyptia-vivo will be created, exposing the Vivo endpoints.
 ```bash_script
 $ kubectl get services
 
@@ -210,12 +209,11 @@ calyptia-vivo   ClusterIP      10.102.243.246   <none>        9000/TCP,9010/TCP,
 
 
 2.a You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Internal Cluster-IP Address\>:8000/vivo/  where \<Internal Cluster-IP address\> is the IP address displayed under the “CLUSTER-IP” column for the calyptia-vivo service in the kubectl get services command output. 
-For example: 
-http://10.102.243.246:8000/vivo/
+For example http://10.102.243.246:8000/vivo/
 
 ##### From the Internet
 
-2.b.1 If you require access to the Vivo web UI from the internet, you can create another service ( for example vivo-svc)  of type Load Balancer by exposing the 3000 port of the calyptia-vivo deployment. For example:
+2.b.1 Suppose you require access to the Vivo web UI from the internet. In that case, you can create another service ( for example, vivo-svc)  of type Load Balancer by exposing the 3000 port of the calyptia-vivo deployment. For example:
 
 ```bash_script 
 $ kubectl expose deployment calyptia-vivo --type=LoadBalancer --port 3000 --name vivo-svc 
@@ -230,7 +228,7 @@ NAME       TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 vivo-svc   LoadBalancer   10.108.188.199   <pending>     3000:30204/TCP   62m
 
 ```
-Here the 30204/TCP  port is mapped to the 3000/TCP internal  port
+The 30204/TCP port is mapped to the 3000/TCP internal port.
 
 2.b.3 Getting the external IP address.
 The external IP address will be the public IP address of your node.
@@ -240,14 +238,16 @@ $ curl ifconfig.io
 35.225.96.210
 ```
 
-2.b.4 Accessing the web UI through the Internet
+2.b.4 Accessing the web UI through the Internet.
+
 You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Public-Node-IPAddress\>:\<Mapped-Port\>/vivo/  where \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
 For example:
 
 http://35.225.96.210:30204/vivo/  
 
-2.b.5 Forwarding logs, metrics and traces to VIVO
-You can forward logs, metrics and traces to Vivo  by adding the following lines to the fluent-bit configuration file.
+2.b.5 Forwarding logs, metrics and traces to VIVO.
+
+You can forward logs, metrics, and traces to Vivo  by adding the following lines to the fluent-bit configuration file.
 
 ```yaml
 [OUTPUT]
@@ -260,7 +260,7 @@ You can forward logs, metrics and traces to Vivo  by adding the following lines 
 Where  \<Internal Cluster-IP address\> is the Cluster IP address of the calyptia-vivo service,  for example:  10.102.243.246.
 
 ## Where is my data sent over?
-The following table enumerate the Vivo end-points  :
+The following table enumerates the Vivo end-points:
 
 | Port | Interface | Description |
 |----------|----------|----------|
@@ -269,6 +269,8 @@ The following table enumerate the Vivo end-points  :
 | 9010 | HTTP input | Data ingestion through HTTP|
 | 2025 | Vivo Exporter | Fluent Bit Vivo streams where the UI pulls data from. This is always exposed. |
 
-> Note: As it can be noticed Vivo ingest the data sent to its 9000 TCP port through the Fluent Forward protocol  and, alternatively to  its 9010 TCP port through HTTP. 
-
+> Note: As can be noticed, Vivo ingests the data sent to its 9000 TCP port through the Fluent Forward protocol and, alternatively, to its 9010 TCP port through HTTP. For example:
+  ```bash_script
+    $ curl -XPOST -H "Content-Type: application/json" -d '{"hello": "Calyptia!"}' http://127.0.0.1:9010 
+  ```
 
