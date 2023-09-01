@@ -103,7 +103,11 @@ Where the fluent-bit.conf file contains the following:
 
 #### 3.- Accessing the Vivo web UI
 
-You can get access to the Vivo web user interface by using a browser and requesting the following URL: `http://localhost:8000/vivo/`
+You can get access to the Vivo web user interface by using a browser and requesting the following URL: 
+
+```text
+http://localhost:8000/vivo/
+```
 
 ### Using Kubernetes
 
@@ -215,10 +219,16 @@ calyptia-vivo   ClusterIP      10.102.243.246   <none>        9000/TCP,9010/TCP,
 
 ##### Internally
 
-2.a You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Internal Cluster-IP Address\>:8000/vivo/ where \<Internal Cluster-IP address\> is the IP address displayed under the “CLUSTER-IP” column for the calyptia-vivo service in the kubectl get services command output.
-For example 
+2.a You can get access to the Vivo web user interface by using a browser and requesting the following URL:
 
 ```text 
+ http://<Internal Cluster-IP Address>:8000/vivo/
+ ```
+
+ Where: \<Internal Cluster-IP address\> is the IP address displayed under the “CLUSTER-IP” column for the calyptia-vivo service in the kubectl get services command output.
+For example:
+
+```text
 http://10.102.243.246:8000/vivo/
 ```
 
@@ -253,7 +263,12 @@ $ curl ifconfig.io
 
 2.b.4 Accessing the web UI through the Internet
 
-You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Public-Node-IPAddress\>:\<Mapped-Port\>/vivo/ where \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
+You can get access to the Vivo web user interface by using a browser and requesting the following URL:
+
+```text
+ http://<Public-Node-IPAddress>:<Mapped-Port>/vivo/
+ ```
+  Where: \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
 For example:
 
 ```text
