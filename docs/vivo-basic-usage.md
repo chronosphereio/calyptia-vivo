@@ -103,7 +103,7 @@ Where the fluent-bit.conf file contains the following:
 
 #### 3.- Accessing the Vivo web UI
 
-You can get access to the Vivo web user interface by using a browser and requesting the following URL: 
+You can get access to the Vivo web user interface by using a browser and requesting the following URL:
 
 ```text
 http://localhost:8000/vivo/
@@ -221,7 +221,7 @@ calyptia-vivo   ClusterIP      10.102.243.246   <none>        9000/TCP,9010/TCP,
 
 2.a You can get access to the Vivo web user interface by using a browser and requesting the following URL:
 
-```text 
+```text
  http://<Internal Cluster-IP Address>:8000/vivo/
  ```
 
@@ -268,6 +268,7 @@ You can get access to the Vivo web user interface by using a browser and request
 ```text
  http://<Public-Node-IPAddress>:<Mapped-Port>/vivo/
  ```
+ 
   Where: \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
 For example:
 
