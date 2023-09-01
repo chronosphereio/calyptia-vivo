@@ -268,7 +268,7 @@ You can get access to the Vivo web user interface by using a browser and request
 ```text
  http://<Public-Node-IPAddress>:<Mapped-Port>/vivo/
  ```
- 
+
   Where: \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
 For example:
 
