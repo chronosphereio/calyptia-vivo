@@ -1,15 +1,14 @@
-
 # Vivo Basic Usage
 
-- [What is the value of Vivo?](#what-is-the-value-of-vivo)
+- [The value of Vivo](#the-value-of-vivo)
    - [User Interface Description](#user-interface-description)
    - [Searching Logs, Metrics and Traces](#searching-logs-metrics-and-traces)
-- [How can I start using it?](#how-can-i-start-using-it)
+- [Starting using Vivo (How to)](#starting-using-vivo-how-to)
    - [Using Docker](#using-docker)
    - [Using Kubernetes](#using-kubernetes)
-- [Where is my data sent over?](#where-is-my-data-sent-over)
+- [Destination where the data is sent over](#destination-where-the-data-is-sent-over)
 
-## What is the value of Vivo?
+## The value of Vivo
 
 Calytptia Vivo is a live viewer for Fluent Bit streams. It provides a visualization interface for logs, metrics, and traces. It supports the work to get insights into the behavior and performance of your software system by helping in understanding what is happening within your applications and infrastructure, diagnose issues, and optimize performance, allowing you to explore the events that occurred within a set of components and track the occurrence of an event to act on.
 
@@ -44,7 +43,7 @@ Searching by Metadata and Event
 
 ![Img 6](img/Image_6.png)
 
-## How can I start using it
+## Starting using Vivo (How to)
 
 A quick way to start using Vivo is by following the next steps.
 
@@ -217,7 +216,11 @@ calyptia-vivo   ClusterIP      10.102.243.246   <none>        9000/TCP,9010/TCP,
 ##### Internally
 
 2.a You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Internal Cluster-IP Address\>:8000/vivo/ where \<Internal Cluster-IP address\> is the IP address displayed under the “CLUSTER-IP” column for the calyptia-vivo service in the kubectl get services command output.
-For example `http://10.102.243.246:8000/vivo/`
+For example 
+
+```text 
+http://10.102.243.246:8000/vivo/
+```
 
 ##### From the Internet
 
@@ -253,7 +256,9 @@ $ curl ifconfig.io
 You can get access to the Vivo web user interface by using a browser and requesting the following URL: http://\<Public-Node-IPAddress\>:\<Mapped-Port\>/vivo/ where \<Public-Node-IPAdress\> is the public address of your node and \<Mapped-Port\> is the port which was mapped when the LoadBalancer service was created.
 For example:
 
-`http://35.225.96.210:30204/vivo/`
+```text
+http://35.225.96.210:30204/vivo/
+```
 
 2.b.5 Forwarding logs, metrics and traces to VIVO.
 
@@ -269,7 +274,7 @@ You can forward logs, metrics, and traces to Vivo by adding the following lines 
 
 Where \<Internal Cluster-IP address\> is the Cluster IP address of the calyptia-vivo service, for example:10.102.243.246.
 
-## Where is my data sent over?
+## Destination where the data is sent over
 
 The following table enumerates the Vivo end-points:
 
