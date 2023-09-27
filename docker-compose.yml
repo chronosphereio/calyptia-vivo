@@ -1,0 +1,9 @@
+# run "docker compose up" and tell fluent-bit to send data to port 9000:
+# fluent-bit -i cpu -o forward://127.0.0.1:9000
+version: '3'
+services:
+  vivo:
+    image: calyptia/vivo
+    ports:
+      - "8000:3000"
+      - "9000:24224"
