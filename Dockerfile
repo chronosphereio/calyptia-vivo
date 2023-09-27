@@ -14,7 +14,7 @@ ENV NEXT_PUBLIC_VIVO_BASE_PATH=${vivo_base_path}
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN \
-      apk add --no-cache git==2.40.1-r0 openssh==9.3_p1-r3 && \
+      apk add --no-cache git openssh && \
       yarn install --network-timeout 1000000000 && \
       yarn next build && \
       yarn next export && \
@@ -44,7 +44,7 @@ RUN go build -o vivo-service -trimpath -tags netgo,osusergo .
 
 ######## Fluent Bit
 FROM fluent/fluent-bit:2.1.6 as production
-ARG vivo_base_path=/
+ARG vivo_base_path
 
 ### Set working directory
 WORKDIR /app
