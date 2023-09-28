@@ -52,7 +52,7 @@
     "rollup-plugin-svg-import": "^2.0.0",
     "rollup-plugin-typescript2": "^0.34.1",
     "storybook": "^7.0.18",
-    "typescript": "^5.0.4",
+    "typescript": "^5.2.2",
     "webpack": "^5.0.0"
   },
   "peerDependencies": {
