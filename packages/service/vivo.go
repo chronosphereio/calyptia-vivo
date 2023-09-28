@@ -50,6 +50,10 @@ func VivoListen(frontendStaticDir string, basePath string) {
 	basePath += "/"
 	fs := http.StripPrefix(basePath, http.FileServer(http.Dir(frontendStaticDir)))
 	http.Handle(basePath, fs)
+	if basePath != "/" {
+		// redirect "/" to base path
+		http.Handle("/", http.RedirectHandler(basePath, http.StatusSeeOther))
+	}
 	http.HandleFunc(basePath+"logs", vivoForward)
 	http.HandleFunc(basePath+"metrics", vivoForward)
 	http.HandleFunc(basePath+"traces", vivoForward)
