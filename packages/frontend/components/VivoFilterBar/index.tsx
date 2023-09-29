@@ -9,6 +9,7 @@ import { BUTTON_GROUP, FILTER_BAR_STYLE, TYPOGRAPHY_DIVIDER } from './constants'
 export interface VivoFilterBarProps {
   filterActionHandler: (target: string, field: string) => void;
   rateActionHandler: (value: number) => void;
+  defaultRate: number;
   playActionHandler: (value: boolean) => void;
   clearActionHandler: () => void;
   play: boolean;
@@ -18,6 +19,7 @@ export interface VivoFilterBarProps {
 const VivoFilterBar = ({
   filterActionHandler,
   rateActionHandler,
+  defaultRate,
   playActionHandler,
   clearActionHandler,
   play = true,
@@ -40,7 +42,7 @@ const VivoFilterBar = ({
       }
       
       <Typography sx={TYPOGRAPHY_DIVIDER}>Refresh time</Typography>
-      <SelectFilter selectHandler={rateActionHandler} />
+      <SelectFilter selectHandler={rateActionHandler} defaultRate={defaultRate} />
       <VerticalRule />
       <ButtonGroup sx={BUTTON_GROUP} aria-label="primary button group">
         <ButtonFilter

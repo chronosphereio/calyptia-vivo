@@ -12,36 +12,38 @@ type Opts = {
 type IdRecord = {
   id: number
   record: unknown
+  rawEvent: string
+  rawMetadata: string
 }
 
 // limits records from the end
 function limitRecords<T>(records: T[], max: number): T[] {
   const delta = records.length - max
   if (delta > 0) {
-    return records.slice(delta)
+    return records.slice(0, records.length - delta)
   }
   return records
 }
 
 async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: number, limit: number) {
-  const from = lastId - limit * 2;
+  const from = Math.max(lastId - limit - 100 , 0);
   const response = await fetch(`${vivoExporterUrl}/${kind}?from=${from}`);
-  const endId = (() => {
-    try {
-      return parseInt(response.headers.get('vivo-stream-end-id') ?? '0');
-    } catch (err) {
-      return 0;
-    }
-  })();
-  let id = (() => {
+  const startId = (() => {
     try {
       return parseInt(response.headers.get('vivo-stream-start-id') ?? '0');
     } catch (err) {
       return 0;
     }
   })();
-  const dataLines = (await response.text()).split('\n').filter(line => line.trim() !== '');
-  return { records: dataLines.map(line => ({ record: JSON.parse(line), id: id++ }) ), lastId: endId }
+  let id = startId;
+  const records = (await response.text()).split('\n')
+    .filter(line => line.trim() !== '')
+    .map(l => {
+      const record = JSON.parse(l)
+      return { record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id++ }
+    });
+  records.reverse();
+  return records
 }
 
 export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit, kind }: Opts) {
@@ -49,34 +51,30 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
   const [ active, setActive ] = useState(false);
 
   useEffect(() => {
-    if (!active) {
+    if (!active || !pollInterval) {
       return;
     }
-    let lastFetchId = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
 
-    let id: ReturnType<typeof setTimeout> | null = null;
     const fetcher = () => {
-      id = null;
+      timer = null;
 
-      fetchStream(vivoExporterUrl, kind, lastFetchId, limit).then(({ records, lastId }) => {
-        // use setTimeout vs setInterval to ensure there are no overlapping requests
-        id = setTimeout(fetcher, pollInterval);
-        lastFetchId = lastId;
-        setRecords(records);
+      fetchStream(vivoExporterUrl, kind, records[0]?.id ?? 0, limit).then(records => {
+        setRecords(limitRecords(records, limit));
       });
     }
 
-    fetcher();
+    timer = setTimeout(fetcher, pollInterval);
 
     return () => {
-      if (id !== null) {
-        clearTimeout(id);
+      if (timer !== null) {
+        clearTimeout(timer);
       }
     }
-  }, [active]);
+  }, [active, kind, limit, pollInterval, vivoExporterUrl, records]);
 
   return {
-    records: limitRecords(records, limit),
+    records,
     setActive: setActive
   }
 }

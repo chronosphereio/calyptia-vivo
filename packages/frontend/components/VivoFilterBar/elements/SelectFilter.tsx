@@ -5,9 +5,10 @@ import { RATE_ICON, RATE_SELECT } from '@calyptia-vivo/components/VivoFilterBar/
 
 export interface SelectFilterProps {
   selectHandler: (value: number) => void;
+  defaultRate: number;
 }
 
-const SelectFilter = ({ selectHandler }: SelectFilterProps) => {
+const SelectFilter = ({ selectHandler, defaultRate }: SelectFilterProps) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <HistoryIcon sx={RATE_ICON} />
@@ -15,10 +16,13 @@ const SelectFilter = ({ selectHandler }: SelectFilterProps) => {
         id="select-rate"
         select
         label={null}
-        defaultValue={5000}
+        defaultValue={defaultRate}
         onChange={(e) => selectHandler(Number(e.target.value))}
         sx={RATE_SELECT}
       >
+        <MenuItem key={1000} value={1000}>
+          1s
+        </MenuItem>
         <MenuItem key={5000} value={5000}>
           5s
         </MenuItem>

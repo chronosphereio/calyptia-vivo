@@ -18,6 +18,7 @@ export interface VivoPageProps {
   rowsPerPageHandler: (value: number) => void;
   filterActionHandler: (target: string, field: string) => void;
   rateActionHandler: (value: number) => void;
+  defaultRate: number;
   playActionHandler: (play: boolean) => void;
   clearActionHandler: () => void;
   play: boolean;
@@ -36,6 +37,7 @@ const VivoPage = ({
   rowsPerPageHandler,
   filterActionHandler,
   rateActionHandler,
+  defaultRate,
   playActionHandler,
   clearActionHandler,
   play,
@@ -51,6 +53,7 @@ const VivoPage = ({
           <VivoFilterBar 
             filterActionHandler={filterActionHandler}
             rateActionHandler={rateActionHandler}
+            defaultRate={defaultRate}
             playActionHandler={playActionHandler}
             clearActionHandler={clearActionHandler}
             play={play}
