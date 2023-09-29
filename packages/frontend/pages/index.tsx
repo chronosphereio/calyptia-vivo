@@ -59,15 +59,17 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
+    const eventFilterLower = eventFilter?.toLowerCase()
+    const metadataFilterLower = metadataFilter?.toLowerCase()
     selectedData = selectedData.filter(data => {
-      if (eventFilter) {
-        if (!JSON.stringify((data.record as Array<string>)).toLowerCase().includes(eventFilter.toLowerCase())) {
+      if (eventFilterLower) {
+        if (!data.rawEvent.toLowerCase().includes(eventFilterLower)) {
           return false;
         }
       }
 
-      if(metadataFilter && kind === 'logs') {
-        if(!JSON.stringify((data.record as Array<Array<string>>)[0][1]).toLowerCase().includes(metadataFilter.toLowerCase())) {
+      if(metadataFilterLower && kind === 'logs') {
+        if(!data.rawMetadata.toLowerCase().includes(metadataFilterLower)) {
           return false;
         }
       }
@@ -100,6 +102,7 @@ const Home: NextPage = () => {
       rowsPerPageHandler={(value) => setRowsPerPage(value)}
       filterActionHandler={filterActionHandler}
       rateActionHandler={(value) => setPollInterval(value)}
+      defaultRate={pollInterval}
       playActionHandler={(play) => setPlay(!play)}
       clearActionHandler={() => alert('clear')}
       play={play}
@@ -112,4 +115,4 @@ const Home: NextPage = () => {
 
 export default Home
 
-const VIVO_EXPORTER_URL = (process.env.NEXT_PUBLIC_VIVO_EXPORTER_URL ?? process.env.NEXT_PUBLIC_VIVO_BASE_PATH ?? 'http://127.0.0.1:2025').trim()
+const VIVO_EXPORTER_URL = (process.env.NEXT_PUBLIC_VIVO_EXPORTER_URL ?? process.env.NEXT_PUBLIC_VIVO_BASE_PATH ?? '').trim()

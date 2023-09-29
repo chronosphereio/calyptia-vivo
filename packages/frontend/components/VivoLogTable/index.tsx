@@ -26,7 +26,7 @@ const VivoLogTable = ({ rows, kind }: VivoLogTableProps) => {
   return (
     <Box sx={PAPER_STYLE} >
       <Header headings={columns[kind]} />
-      <List sx={{ display: "flex", flexDirection: "column-reverse" }}>
+      <List sx={{ display: "flex", flexDirection: "column" }}>
       {rows && rows.map((row) => {
         const key = row.id.toString();
         const timestamp = kind === 'logs' ? Math.floor(row.record[0][0] / 1e6) : 0;

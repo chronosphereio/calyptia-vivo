@@ -1,5 +1,5 @@
 {
-  "name": "@calyptia-vivo/frontend",
+  "name": "calyptia-vivo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,6 @@
     "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
-    "@calyptia-vivo/components": "^0.0.3",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/legacy-modes": "codemirror/legacy-modes",
     "@mui/icons-material": "^5.11.11",
