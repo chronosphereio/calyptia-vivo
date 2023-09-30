@@ -16,33 +16,30 @@ type IdRecord = {
   rawMetadata: string
 }
 
-// limits records from the end
-function limitRecords<T>(records: T[], max: number): T[] {
-  const delta = records.length - max
-  if (delta > 0) {
-    return records.slice(0, records.length - delta)
-  }
-  return records
-}
-
 async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: number, limit: number) {
-  const from = Math.max(lastId - limit - 100 , 0);
+  const from = Math.max(lastId - limit - 10, 0);
   const response = await fetch(`${vivoExporterUrl}/${kind}?from=${from}`);
-  const startId = (() => {
+  const endId = (() => {
     try {
-      return parseInt(response.headers.get('vivo-stream-start-id') ?? '0');
+      return parseInt(response.headers.get('vivo-stream-end-id') ?? '0');
     } catch (err) {
       return 0;
     }
   })();
-  let id = startId;
-  const records = (await response.text()).split('\n')
-    .filter(line => line.trim() !== '')
-    .map(l => {
-      const record = JSON.parse(l)
-      return { record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id++ }
-    });
-  records.reverse();
+  let id = endId;
+  const lines = (await response.text()).split('\n');
+  const records = [];
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (records.length === limit) {
+      break;
+    }
+    const line = lines[i].trim();
+    if (line === '') {
+      continue;
+    }
+    const record = JSON.parse(line)
+    records.push({ record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id-- });
+  }
   return records
 }
 
@@ -60,7 +57,7 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
       timer = null;
 
       fetchStream(vivoExporterUrl, kind, records[0]?.id ?? 0, limit).then(records => {
-        setRecords(limitRecords(records, limit));
+        setRecords(records);
       });
     }
 
