@@ -38,7 +38,11 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
       continue;
     }
     const record = JSON.parse(line)
-    records.push({ record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id-- });
+    if (Array.isArray(record)) {
+      records.push({ record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id-- });
+    } else {
+      records.push({ record, id: id-- });
+    }
   }
   return records
 }
