@@ -41,7 +41,7 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
     if (Array.isArray(record)) {
       records.push({ record, rawEvent: JSON.stringify(record[1]), rawMetadata: JSON.stringify(record[0][1]), id: id-- });
     } else {
-      records.push({ record, id: id-- });
+      records.push({ record, rawEvent: '', rawMetadata: '', id: id-- });
     }
   }
   return records
