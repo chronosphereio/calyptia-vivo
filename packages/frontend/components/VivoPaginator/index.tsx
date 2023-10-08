@@ -4,9 +4,9 @@ import { Stack } from '@mui/material';
 import { PAGINATOR_STYLE } from '@calyptia-vivo/components/VivoPaginator/constants';
 
 export interface VivoPaginatorProps {
-  recordStart: string;
-  recordEnd: string;
-  rowsPerPage: string;
+  recordStart: number;
+  recordEnd: number;
+  rowsPerPage: number;
   page: number;
   pageChangeHandler: (value: number) => void;
   rowsPerPageHandler: (value: number) => void;

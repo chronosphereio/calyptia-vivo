@@ -2,7 +2,6 @@ import { Box, Stack } from '@mui/material';
 
 import VivoFilterBar from '@calyptia-vivo/components/VivoFilterBar';
 import VivoLogTable from '@calyptia-vivo/components/VivoLogTable';
-import VivoPaginator from '@calyptia-vivo/components/VivoPaginator';
 import VivoSideBar from '@calyptia-vivo/components/VivoSideBar';
 import { CONTENT_STYLES, PAGE_STYLES } from '@calyptia-vivo/components/VivoPage/constants';
 import { Header } from '@calyptia-vivo/components/VivoPage/elements';
@@ -10,9 +9,6 @@ import { Header } from '@calyptia-vivo/components/VivoPage/elements';
 export interface VivoPageProps {
   menuActionHandler: (target: string) => void;
   learnHowActionHandler: () => void;
-  recordStart: string;
-  recordEnd?: string;
-  recordsPerPage: string;
   page: number;
   pageChangeHandler: (value: number) => void;
   rowsPerPageHandler: (value: number) => void;
@@ -29,12 +25,6 @@ export interface VivoPageProps {
 const VivoPage = ({
   menuActionHandler,
   learnHowActionHandler,
-  recordStart,
-  recordEnd,
-  recordsPerPage,
-  page,
-  pageChangeHandler,
-  rowsPerPageHandler,
   filterActionHandler,
   rateActionHandler,
   defaultRate,
@@ -60,16 +50,6 @@ const VivoPage = ({
             kind={tab}
           />
           <VivoLogTable rows={data} kind={tab} />
-          { recordEnd ? (
-            <VivoPaginator
-              page={page}
-              recordStart={recordStart}
-              recordEnd={recordEnd}
-              rowsPerPage={recordsPerPage}
-              pageChangeHandler={pageChangeHandler}
-              rowsPerPageHandler={rowsPerPageHandler}
-            />
-        ): ''} 
         </Stack>
       </Box>
     </Stack>

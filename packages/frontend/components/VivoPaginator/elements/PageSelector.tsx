@@ -3,8 +3,8 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import { Stack } from '@mui/material';
 
 export interface PageSelectorProps {
-  rows: string;
-  end: string;
+  rows: number;
+  end: number;
   page: number;
   pageChangeHandler: (value: number) => void;
 }
@@ -15,8 +15,8 @@ const PageSelector = ({ page, rows, end, pageChangeHandler }: PageSelectorProps)
 
   return (
     <Stack direction="row">
-      <ArrowBackIosNewOutlinedIcon className={isBackDisabled} onClick={() => pageChangeHandler(-1)} />
-      <ArrowForwardIosOutlinedIcon className={isForwardDisabled} onClick={() => pageChangeHandler(1)} />
+      <ArrowBackIosNewOutlinedIcon className={isBackDisabled} onClick={() => pageChangeHandler(page-1)} />
+      <ArrowForwardIosOutlinedIcon className={isForwardDisabled} onClick={() => pageChangeHandler(page + 1)} />
     </Stack>
   );
 };

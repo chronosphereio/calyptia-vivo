@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
 
 export interface RecordsDisplayProps {
-  start: string;
-  end: string;
-  rows: string;
+  start: number;
+  end: number;
+  rows: number;
 }
 
 const RecordsDisplay = ({ start, end, rows }: RecordsDisplayProps) => {

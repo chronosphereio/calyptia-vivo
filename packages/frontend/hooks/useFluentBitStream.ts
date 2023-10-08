@@ -9,7 +9,7 @@ type Opts = {
   kind: StreamKind
 }
 
-type IdRecord = {
+export type IdRecord = {
   id: number
   record: unknown
   rawEvent: string

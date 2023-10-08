@@ -3,7 +3,7 @@ import { FormControl, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { PAGINATOR_DISPLAY_STYLE } from '../constants';
 
 export interface RecordsSelectorProps {
-  rows: string;
+  rows: number;
   rowsPerPageHandler: (value: number) => void;
 }
 
