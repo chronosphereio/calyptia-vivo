@@ -50,6 +50,7 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
 export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit, kind }: Opts) {
   const [ records, setRecords ] = useState([] as IdRecord[])
   const [ active, setActive ] = useState(false);
+  const [ initialFetch, setInitialFetch ] = useState(true);
 
   useEffect(() => {
     if (!active || !pollInterval) {
@@ -59,20 +60,24 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
 
     const fetcher = () => {
       timer = null;
-
       fetchStream(vivoExporterUrl, kind, records[0]?.id ?? 0, limit).then(records => {
         setRecords(records);
       });
     }
 
-    timer = setTimeout(fetcher, pollInterval);
+    if (initialFetch) {
+      fetcher();
+      setInitialFetch(false);
+    } else {
+      timer = setTimeout(fetcher, pollInterval);
+    }
 
     return () => {
       if (timer !== null) {
         clearTimeout(timer);
       }
     }
-  }, [active, kind, limit, pollInterval, vivoExporterUrl, records]);
+  }, [active, kind, limit, pollInterval, vivoExporterUrl, records, initialFetch]);
 
   return {
     records,
