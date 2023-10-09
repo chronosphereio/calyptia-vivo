@@ -15,7 +15,7 @@ ENV NEXT_PUBLIC_VIVO_BASE_PATH=${vivo_base_path}
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN \
       apk add --no-cache git openssh && \
-      yarn install --network-timeout 1000000000 && \
+      yarn install --frozen-lockfile --network-timeout 1000000000 && \
       yarn next build && \
       yarn next export && \
       # There's no way to change absolute URL references in css files using next.js
