@@ -8,7 +8,7 @@ import { LOG_DETAIL_PANEL, LOG_EVENT_BOX_STYLE, LOG_EVENT_ROW_STYLE } from '@cal
 
 const formatTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
-  const formatTime = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+  const formatTime = date.toLocaleString('en-US', { second: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
   const formatDate = date.toLocaleString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' })
   return `${formatDate} | ${formatTime}`
 }
