@@ -4,10 +4,11 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
 
 import { MENU_STYLE } from '../constants';
+import { StreamKind } from '@calyptia-vivo/lib/types';
 
 interface VivoMenuProps {
-  clickHandler: (target: string) => void;
-  active: string
+  clickHandler: (target: StreamKind) => void;
+  active: StreamKind
 }
 
 const VivoMenu = ({ clickHandler, active='logs' }: VivoMenuProps) => {

@@ -5,9 +5,10 @@ import VivoLogTable from '@calyptia-vivo/components/VivoLogTable';
 import VivoSideBar from '@calyptia-vivo/components/VivoSideBar';
 import { CONTENT_STYLES, PAGE_STYLES } from '@calyptia-vivo/components/VivoPage/constants';
 import { Header } from '@calyptia-vivo/components/VivoPage/elements';
+import { Stream, StreamKind } from '@calyptia-vivo/lib/types';
 
 export interface VivoPageProps {
-  menuActionHandler: (target: string) => void;
+  menuActionHandler: (target: StreamKind) => void;
   learnHowActionHandler: () => void;
   page: number;
   pageChangeHandler: (value: number) => void;
@@ -18,8 +19,7 @@ export interface VivoPageProps {
   playActionHandler: (play: boolean) => void;
   clearActionHandler: () => void;
   play: boolean;
-  tab: string;
-  data: any;
+  stream: Stream;
 }
 
 const VivoPage = ({
@@ -31,15 +31,14 @@ const VivoPage = ({
   playActionHandler,
   clearActionHandler,
   play,
-  tab,
-  data
+  stream,
 }: VivoPageProps) => {
   return (
     <Stack sx={PAGE_STYLES} direction="row">
-      <VivoSideBar menuActionHandler={menuActionHandler} learnHowActionHandler={learnHowActionHandler} active={tab} />
+      <VivoSideBar menuActionHandler={menuActionHandler} learnHowActionHandler={learnHowActionHandler} active={stream.kind} />
       <Box className={'content-container'}>
         <Stack sx={CONTENT_STYLES} direction="column">
-          <Header kind={tab} />
+          <Header kind={stream.kind} />
           <VivoFilterBar 
             filterActionHandler={filterActionHandler}
             rateActionHandler={rateActionHandler}
@@ -47,9 +46,9 @@ const VivoPage = ({
             playActionHandler={playActionHandler}
             clearActionHandler={clearActionHandler}
             play={play}
-            kind={tab}
+            kind={stream.kind}
           />
-          <VivoLogTable rows={data} kind={tab} />
+          <VivoLogTable stream={stream} />
         </Stack>
       </Box>
     </Stack>

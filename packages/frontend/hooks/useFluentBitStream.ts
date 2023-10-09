@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-
-export type StreamKind = 'logs' | 'metrics' | 'traces'
+import type { StreamKind, Stream } from '@calyptia-vivo/lib/types'
 
 type Opts = {
   vivoExporterUrl: string
@@ -9,14 +8,7 @@ type Opts = {
   kind: StreamKind
 }
 
-export type IdRecord = {
-  id: number
-  record: unknown
-  rawEvent: string
-  rawMetadata: string
-}
-
-async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: number, limit: number) {
+async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: number, limit: number): Promise<Stream> {
   const from = Math.max(lastId - limit - 10, 0);
   const response = await fetch(`${vivoExporterUrl}/${kind}?from=${from}`);
   const endId = (() => {
@@ -44,13 +36,30 @@ async function fetchStream(vivoExporterUrl: string, kind: StreamKind, lastId: nu
       records.push({ record, rawEvent: '', rawMetadata: '', id: id-- });
     }
   }
-  return records
+  return {
+    records,
+    kind
+  }
 }
 
 export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limit, kind }: Opts) {
-  const [ records, setRecords ] = useState([] as IdRecord[])
-  const [ active, setActive ] = useState(false);
-  const [ initialFetch, setInitialFetch ] = useState(true);
+  const [ state, setState ] = useState({
+    kind,
+    stream: {
+      records: [],
+      kind
+    } as Stream,
+    initialFetch: true
+  })
+  const [ active, setActive ] = useState(true);
+
+  useEffect(() => {
+    setState(s => ({
+      ...s,
+      kind,
+      initialFetch: true
+    }));
+  }, [kind])
 
   useEffect(() => {
     if (!active || !pollInterval) {
@@ -60,14 +69,22 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
 
     const fetcher = () => {
       timer = null;
-      fetchStream(vivoExporterUrl, kind, records[0]?.id ?? 0, limit).then(records => {
-        setRecords(records);
+      fetchStream(vivoExporterUrl, kind, state.stream.records[0]?.id ?? 0, limit).then(stream => {
+        setState(s => {
+          if (s.kind === kind) {
+            return {
+              ...s,
+              stream,
+              initialFetch: false
+            }
+          }
+          return s;
+        });
       });
     }
 
-    if (initialFetch) {
+    if (state.initialFetch) {
       fetcher();
-      setInitialFetch(false);
     } else {
       timer = setTimeout(fetcher, pollInterval);
     }
@@ -77,10 +94,11 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         clearTimeout(timer);
       }
     }
-  }, [active, kind, limit, pollInterval, vivoExporterUrl, records, initialFetch]);
+  }, [active, kind, limit, pollInterval, vivoExporterUrl, state.stream, state.initialFetch]);
 
   return {
-    records,
+    stream: state.stream,
+    active,
     setActive: setActive
   }
 }

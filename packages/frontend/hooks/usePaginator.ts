@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import type { IdRecord, StreamKind } from './useFluentBitStream';
+import type { IdRecord, Stream } from '@calyptia-vivo/lib/types'
 
 
 function computeLastPage(allRecords: IdRecord[], pageSize: number) {
@@ -21,13 +21,16 @@ function computePageRecords(allRecords: IdRecord[], pageSize: number, page: numb
   return [allRecords.slice(startIndex, endIndex), startIndex] as [IdRecord[], number];
 }
 
-export default function usePaginator(allRecords: IdRecord[], streamKind: StreamKind) {
+export default function usePaginator(stream: Stream) {
   const [state, setState] = useState({
     page: 0,
     pageSize: 10,
-    records: [] as IdRecord[],
+    paginatedStream: {
+      records: [],
+      kind: stream.kind
+    } as Stream,
     startIndex: 0,
-    totalRecords: allRecords.length
+    totalRecords: stream.records.length
   });
 
   useEffect(() => {
@@ -35,23 +38,26 @@ export default function usePaginator(allRecords: IdRecord[], streamKind: StreamK
       ...s,
       page: 0
     }));
-  }, [streamKind])
+  }, [stream.kind])
 
   useEffect(() => {
     setState(s => {
-      const [records, startIndex] = computePageRecords(allRecords, s.pageSize, s.page);
+      const [records, startIndex] = computePageRecords(stream.records, s.pageSize, s.page);
       return {
         ...s,
-        records,
+        paginatedStream: {
+          records,
+          kind: stream.kind
+        } as Stream,
         startIndex,
-        totalRecords: allRecords.length
+        totalRecords: stream.records.length
       }
     });
-  }, [allRecords, state.page, state.pageSize]);
+  }, [stream, state.page, state.pageSize]);
 
   function setPage(val: number) {
     setState(s => {
-      const lastPage = computeLastPage(allRecords, s.pageSize);
+      const lastPage = computeLastPage(stream.records, s.pageSize);
       let page = val
       if (page > lastPage) {
         page = lastPage;
@@ -68,8 +74,8 @@ export default function usePaginator(allRecords: IdRecord[], streamKind: StreamK
   function setPageSize(val: number) {
     setState(s => {
       let pageSize = val;
-      if (pageSize > allRecords.length) {
-        pageSize = allRecords.length
+      if (pageSize > stream.records.length) {
+        pageSize = stream.records.length
       } else if (pageSize < 5) {
         pageSize = 5
       }
