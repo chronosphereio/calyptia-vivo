@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   const [kind, setKind] = useState<StreamKind>('logs');
   const [pollInterval, setPollInterval] = useState<number>(5000);
 
-  const { stream, active, setActive } = useFluentBitStream({
+  const { stream, active, clear, setActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
     pollInterval,
@@ -52,8 +52,7 @@ const Home: NextPage = () => {
         rateActionHandler={(value) => setPollInterval(value)}
         defaultRate={pollInterval}
         playActionHandler={(play) => setActive(!play)}
-        clearActionHandler={() => {
-        }}
+        clearActionHandler={clear}
         play={active}
         stream={paginatedStream}
         page={page}
