@@ -1,4 +1,4 @@
-import { Header, LogEvent } from '@calyptia-vivo/components/VivoLogTable/elements';
+import { Header, LogEventItem, MetricTraceEventItem } from '@calyptia-vivo/components/VivoLogTable/elements';
 import { Box } from '@mui/material';
 import List from "@mui/material/List"
 import { Stream } from '@calyptia-vivo/lib/types';
@@ -26,15 +26,10 @@ const VivoLogTable = ({ stream }: VivoLogTableProps) => {
       <Header headings={columns[stream.kind]} />
       <List sx={{ display: "flex", flexDirection: "column" }}>
       {logStream ? logStream.records.map((row) => {
-        const key = row.id.toString();
-        const timestamp = Math.floor(row.record[0][0] / 1e6);
-        const meta = JSON.stringify(row.record[0][1])
-        const event = JSON.stringify(row.record[1])
-        return <LogEvent key={key} timestamp={timestamp} meta={meta} event={event} kind={kind} />
+        return <LogEventItem key={row.id} {...row} />
       }): ''}
       {metricsTracesStream ? metricsTracesStream.records.map((row) => {
-        const key = row.id.toString();
-        return <LogEvent key={key} timestamp={0} event={JSON.stringify(row.record)} kind={kind} />
+        return <MetricTraceEventItem key={row.id} {...row} />
       }) : ''}
       </List>
     </Box>

@@ -1,3 +1,3 @@
 export * from './Header';
-export * from './LogEvent';
+export * from './Event';
 export * from './CodeBoxCM';
