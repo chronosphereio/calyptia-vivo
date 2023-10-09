@@ -20,6 +20,9 @@ const SelectFilter = ({ selectHandler, defaultRate }: SelectFilterProps) => {
         onChange={(e) => selectHandler(Number(e.target.value))}
         sx={RATE_SELECT}
       >
+        <MenuItem key={100} value={100}>
+          0.1s
+        </MenuItem>
         <MenuItem key={1000} value={1000}>
           1s
         </MenuItem>
