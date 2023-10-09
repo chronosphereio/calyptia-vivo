@@ -52,21 +52,22 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
       kind
     } as Stream,
     initialFetch: true,
-    clearedAt: 0
+    clearedAt: 0,
+    active: true
   })
-  const [ active, setActive ] = useState(true);
 
   useEffect(() => {
     setState(s => ({
       ...s,
       kind,
       clearedAt: 0,  // when switching kind, remove the clearedAt
-      initialFetch: true
+      initialFetch: true,
+      active: true
     }));
   }, [kind])
 
   useEffect(() => {
-    if (!active || !pollInterval) {
+    if (!state.active || !pollInterval) {
       return;
     }
     let timer: ReturnType<typeof setTimeout> | null = null;
@@ -99,11 +100,11 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         clearTimeout(timer);
       }
     }
-  }, [active, kind, limit, pollInterval, vivoExporterUrl, state.stream, state.initialFetch, state.clearedAt]);
+  }, [state.active, kind, limit, pollInterval, vivoExporterUrl, state.stream, state.initialFetch, state.clearedAt]);
 
   return {
     stream: state.stream,
-    active,
+    active: state.active,
     clear: () => {
       setState(s => ({
         ...s,
@@ -111,6 +112,11 @@ export default function useFluentBitStream({ vivoExporterUrl, pollInterval, limi
         initialFetch: true  // when clearing, fetch immediately
       }));
     },
-    setActive: setActive
+    setActive: (val: boolean) => {
+      setState(s => ({
+        ...s,
+        active: val
+      }))
+    }
   }
 }
