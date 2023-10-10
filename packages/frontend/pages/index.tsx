@@ -1,115 +1,71 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
-import useFluentBitStream, { StreamKind } from '../hooks/useFluentBitStream';
+import { useState } from 'react'
+import useFluentBitStream from '../hooks/useFluentBitStream';
+import useRecordFilter from '../hooks/useRecordFilter';
+import usePaginator from '../hooks/usePaginator';
+import { StreamKind } from '@calyptia-vivo/lib/types';
 import { VivoPage } from '@calyptia-vivo/components';
+import { VivoPaginator } from '@calyptia-vivo/components';
 
 const Home: NextPage = () => {
   const [kind, setKind] = useState<StreamKind>('logs');
   const [pollInterval, setPollInterval] = useState<number>(5000);
-  const [play, setPlay] = useState<boolean>(true);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
-  const [data, setData] = useState<any>(undefined);
-  const [recordEnd, setRecordEnd] = useState<number|undefined>(undefined);
-  const [page, setPage] = useState<number>(0);
-  const [startRecord, setStartRecord] = useState<number>(1);
-  const [metadataFilter, setMetadataFilter] = useState<string | undefined>(undefined);
-  const [eventFilter, setEventFilter] = useState<string | undefined>(undefined);
-  const [activeType, setActiveType] = useState<string>('logs')
 
-  const { records: logs, setActive: setLogsActive } = useFluentBitStream({
+  const { stream, active, clear, setActive } = useFluentBitStream({
     vivoExporterUrl: VIVO_EXPORTER_URL,
     limit: 100,
-    pollInterval: play ? pollInterval : 0,
-    kind: 'logs'
+    pollInterval,
+    kind
   });
 
-  const { records: metrics, setActive: setMetricsActive } = useFluentBitStream({
-    vivoExporterUrl: VIVO_EXPORTER_URL,
-    limit: 100,
-    pollInterval: play ? pollInterval : 0,
-    kind: 'metrics'
-  });
+  const {
+    filteredStream,
+    setEventFilter,
+    setMetadataFilter
+  } = useRecordFilter(stream);
 
-  const { records: traces, setActive: setTracesActive } = useFluentBitStream({
-    vivoExporterUrl: VIVO_EXPORTER_URL,
-    limit: 100,
-    pollInterval: play ? pollInterval : 0,
-    kind: 'traces'
-  });
+  const {
+    paginatedStream,
+    page,
+    pageSize,
+    startIndex,
+    totalRecords,
+    setPageSize,
+    setPage
+  } = usePaginator(filteredStream);
 
-  useEffect(() => {
-    switch (kind) {
-      case 'logs':
-        setMetricsActive(false);
-        setTracesActive(false);
-        setLogsActive(true);
-        break;
-      case 'metrics':
-        setLogsActive(false);
-        setTracesActive(false);
-        setMetricsActive(true);
-        break;
-      case 'traces':
-        setLogsActive(false);
-        setMetricsActive(false);
-        setTracesActive(true);
-        break;
-    }
-  }, [kind, setLogsActive, setMetricsActive, setTracesActive])
-
-  useEffect(() => {
-    let selectedData = kind === 'logs' ? logs : kind === 'metrics' ? metrics : traces
-    const eventFilterLower = eventFilter?.toLowerCase()
-    const metadataFilterLower = metadataFilter?.toLowerCase()
-    selectedData = selectedData.filter(data => {
-      if (eventFilterLower) {
-        if (!data.rawEvent.toLowerCase().includes(eventFilterLower)) {
-          return false;
-        }
-      }
-
-      if(metadataFilterLower && kind === 'logs') {
-        if(!data.rawMetadata.toLowerCase().includes(metadataFilterLower)) {
-          return false;
-        }
-      }
-
-      return true;
-    })
-    setRecordEnd(selectedData.length)
-    const start = page * rowsPerPage
-    selectedData = selectedData.slice(start, (start+1)*Number(rowsPerPage))
-    setStartRecord(start+1)
-    setData(selectedData)
-    setActiveType(kind)
-  }, [kind, logs, metrics, traces, rowsPerPage, page, eventFilter, metadataFilter])
-
-  const filterActionHandler = (target: string, field:string) => {
+  const filterActionHandler = (target: string, field: string) => {
     field === 'metadata' ? setMetadataFilter(target) : setEventFilter(target)
     setPage(0)
   }
 
   return (
-    <VivoPage 
-      menuActionHandler={(target) => {
-        setKind(target as StreamKind)
-      }}
-      learnHowActionHandler={() => (window.location.href = 'https://github.com/calyptia/vivo')}
-      recordStart={startRecord.toString()}
-      recordEnd={recordEnd?.toString()}
-      recordsPerPage={rowsPerPage.toString()}
-      pageChangeHandler={(value) => setPage(page + value)}
-      rowsPerPageHandler={(value) => setRowsPerPage(value)}
-      filterActionHandler={filterActionHandler}
-      rateActionHandler={(value) => setPollInterval(value)}
-      defaultRate={pollInterval}
-      playActionHandler={(play) => setPlay(!play)}
-      clearActionHandler={() => alert('clear')}
-      play={play}
-      tab={activeType}
-      data={data}
-      page={page}
-    />
+    <>
+      <VivoPage
+        menuActionHandler={(target) => {
+          setKind(target as StreamKind)
+        }}
+        learnHowActionHandler={() => (window.location.href = 'https://github.com/calyptia/vivo')}
+        pageChangeHandler={(value) => setPage(value)}
+        rowsPerPageHandler={(value) => setPageSize(value)}
+        filterActionHandler={filterActionHandler}
+        rateActionHandler={(value) => setPollInterval(value)}
+        defaultRate={pollInterval}
+        playActionHandler={(play) => setActive(!play)}
+        clearActionHandler={clear}
+        play={active}
+        stream={paginatedStream}
+        page={page}
+      />
+      <VivoPaginator
+        recordStart={startIndex + 1}
+        recordEnd={totalRecords}
+        rowsPerPage={pageSize}
+        pageChangeHandler={p => setPage(p)}
+        page={page}
+        rowsPerPageHandler={p => setPageSize(p)}
+      />
+    </>
   )
 }
 

@@ -2,17 +2,14 @@ import { Box, Stack } from '@mui/material';
 
 import VivoFilterBar from '@calyptia-vivo/components/VivoFilterBar';
 import VivoLogTable from '@calyptia-vivo/components/VivoLogTable';
-import VivoPaginator from '@calyptia-vivo/components/VivoPaginator';
 import VivoSideBar from '@calyptia-vivo/components/VivoSideBar';
 import { CONTENT_STYLES, PAGE_STYLES } from '@calyptia-vivo/components/VivoPage/constants';
 import { Header } from '@calyptia-vivo/components/VivoPage/elements';
+import { Stream, StreamKind } from '@calyptia-vivo/lib/types';
 
 export interface VivoPageProps {
-  menuActionHandler: (target: string) => void;
+  menuActionHandler: (target: StreamKind) => void;
   learnHowActionHandler: () => void;
-  recordStart: string;
-  recordEnd?: string;
-  recordsPerPage: string;
   page: number;
   pageChangeHandler: (value: number) => void;
   rowsPerPageHandler: (value: number) => void;
@@ -22,34 +19,26 @@ export interface VivoPageProps {
   playActionHandler: (play: boolean) => void;
   clearActionHandler: () => void;
   play: boolean;
-  tab: string;
-  data: any;
+  stream: Stream;
 }
 
 const VivoPage = ({
   menuActionHandler,
   learnHowActionHandler,
-  recordStart,
-  recordEnd,
-  recordsPerPage,
-  page,
-  pageChangeHandler,
-  rowsPerPageHandler,
   filterActionHandler,
   rateActionHandler,
   defaultRate,
   playActionHandler,
   clearActionHandler,
   play,
-  tab,
-  data
+  stream,
 }: VivoPageProps) => {
   return (
     <Stack sx={PAGE_STYLES} direction="row">
-      <VivoSideBar menuActionHandler={menuActionHandler} learnHowActionHandler={learnHowActionHandler} active={tab} />
+      <VivoSideBar menuActionHandler={menuActionHandler} learnHowActionHandler={learnHowActionHandler} active={stream.kind} />
       <Box className={'content-container'}>
         <Stack sx={CONTENT_STYLES} direction="column">
-          <Header kind={tab} />
+          <Header kind={stream.kind} />
           <VivoFilterBar 
             filterActionHandler={filterActionHandler}
             rateActionHandler={rateActionHandler}
@@ -57,19 +46,9 @@ const VivoPage = ({
             playActionHandler={playActionHandler}
             clearActionHandler={clearActionHandler}
             play={play}
-            kind={tab}
+            kind={stream.kind}
           />
-          <VivoLogTable rows={data} kind={tab} />
-          { recordEnd ? (
-            <VivoPaginator
-              page={page}
-              recordStart={recordStart}
-              recordEnd={recordEnd}
-              rowsPerPage={recordsPerPage}
-              pageChangeHandler={pageChangeHandler}
-              rowsPerPageHandler={rowsPerPageHandler}
-            />
-        ): ''} 
+          <VivoLogTable stream={stream} />
         </Stack>
       </Box>
     </Stack>

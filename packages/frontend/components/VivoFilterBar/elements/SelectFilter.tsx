@@ -8,6 +8,14 @@ export interface SelectFilterProps {
   defaultRate: number;
 }
 
+const intervals = [
+  { label: '0.1s', value: 100 },
+  { label: '1s', value: 1000 },
+  { label: '5s', value: 5000 },
+  { label: '10s', value: 10000 },
+  { label: '20s', value: 20000 },
+]
+
 const SelectFilter = ({ selectHandler, defaultRate }: SelectFilterProps) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -20,18 +28,10 @@ const SelectFilter = ({ selectHandler, defaultRate }: SelectFilterProps) => {
         onChange={(e) => selectHandler(Number(e.target.value))}
         sx={RATE_SELECT}
       >
-        <MenuItem key={1000} value={1000}>
-          1s
-        </MenuItem>
-        <MenuItem key={5000} value={5000}>
-          5s
-        </MenuItem>
-        <MenuItem key={10000} value={10000}>
-          10s
-        </MenuItem>
-        <MenuItem key={20000} value={20000}>
-          20s
-        </MenuItem>
+        {intervals.map(i => (
+          <MenuItem key={i.value} value={i.value}>
+            {i.label}
+          </MenuItem>))}
       </TextField>
     </Box>
   );
