@@ -55,14 +55,12 @@ const LogEventItem = ({
         />
       </Stack>
       <Collapse in={expandedView}>
-
         <Stack direction="column" sx={LOG_DETAIL_PANEL}>
           <Typography>Metadata</Typography>
           <CodeBoxCM readOnly={true} value={expandedData[0]} height="152px" language="json" />
           <Typography>Event</Typography>
           <CodeBoxCM readOnly={true} value={expandedData[1]} height="266px" language="json" />
         </Stack>
-
       </Collapse>
     </Box>
   );
