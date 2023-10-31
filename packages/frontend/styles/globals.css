@@ -14,9 +14,10 @@ body {
 }
 
 body {
-  background: url('/vivo2.jpg');
+	background-image: linear-gradient(to top right, rgba(142,182,231,1), rgba(249,194,200,1));
   font-family: 'Rubik';
-  margin: 1vw 2vw 1vw 2vw;
+  margin-top: 0.5vw;
+  margin-left: 1vw;
 }
 
 a {

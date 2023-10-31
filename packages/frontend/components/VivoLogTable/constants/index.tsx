@@ -7,7 +7,7 @@ export const PAPER_STYLE = {
   background: 'none',
   flex: 16,
   width: '100%',
-  overflow: 'scroll'
+  overflow: 'auto'
 };
 
 export const HEADER_STYLES = {
