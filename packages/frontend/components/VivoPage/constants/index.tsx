@@ -4,6 +4,7 @@ export const PAGE_STYLES = {
     borderRadius: '8px',
     ml: 2,
     width: '80vw',
+    overflowX: 'auto'
   }
 };
 
