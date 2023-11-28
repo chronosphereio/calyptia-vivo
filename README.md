@@ -1,7 +1,8 @@
 # Vivo
 
 [Vivo](https://github.com/calyptia/vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
-hello_calyptia.png)
+
+![Calyptia Logo](./docs/hello_calyptia.png)
 
 ## Architecture
 
