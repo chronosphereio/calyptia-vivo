@@ -8,11 +8,11 @@
 
 The following components are used in Vivo:
 
-- [component] [packages/service](./packages/service): Golang service that starts/manages Fluent Bit
-- [component] [packages/frontend](./packages/frontend): Frontend React App that pulls telemetry data from Fluent Bit (new approach)
-- [component] Fluent Bit: telemetry agent with new export/streaming capabilities
+- [packages/service](./packages/service): Golang service that starts/manages Fluent Bit
+- [packages/frontend](./packages/frontend): Frontend React App that pulls telemetry data from Fluent Bit (new approach)
+- [Fluent Bit](https://github.com/fluent/fluent-bit): telemetry agent with new export/streaming capabilities
 
-To simplify the data management per type, Fluent Bit now supports a new output plugin called [Vivo Exporter](https://docs.fluentbit.io/manual/v/dev-2.1/pipeline/outputs/vivo-exporter).
+To simplify the data management per type, Fluent Bit now supports a new output plugin called [Vivo Exporter](https://docs.fluentbit.io/manual/pipeline/outputs/vivo-exporter).
 This plugin buffers telemetry data in a queue of a fixed size and exposes the content through HTTP endpoints: `/logs`, `/metrics`, `/traces`.
 The UI part pulls data from there.
 
