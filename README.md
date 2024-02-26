@@ -1,6 +1,6 @@
 # Vivo
 
-[Vivo](https://github.com/calyptia/vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
+[Vivo](https://github.com/chronosphereio/calyptia-vivo) provides a visualization interface for _logs_, _metrics,_ and _traces_.
 
 ![Calyptia Logo](./docs/hello_calyptia.png)
 
