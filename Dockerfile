@@ -27,7 +27,7 @@ RUN \
       find out -name '*.css' -print0 | xargs -0 sed "s@url(/@url($NEXT_PUBLIC_VIVO_BASE_PATH/@g" -i
 
 #########
-FROM golang:1.21 as service-builder
+FROM golang:1.22 as service-builder
 
 # Ensure we produce a static binary to prevent issues between this image and the production one
 ARG TARGETOS TARGETARCH
