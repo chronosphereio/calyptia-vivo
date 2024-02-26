@@ -119,7 +119,7 @@ jobs:
         timeout-minutes: 5
         run: |
           echo "Waiting for deployment to complete..."
-          until kubectl rollout status deployment calyptia-vivo; do
+          until kubectl rollout status deployment calyptia-vivo --timeout=2s; do
             kubectl get all
             sleep 2
           done
