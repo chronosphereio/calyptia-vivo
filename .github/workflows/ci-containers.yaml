@@ -62,7 +62,7 @@ jobs:
           build-args: "vivo_base_path=/vivo"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           load: false
           target: production
@@ -112,6 +112,7 @@ jobs:
           sed -i 's|image: calyptia/vivo|image: ghcr.io/chronosphereio/calyptia-vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
           cat ./vivo-deployment.yaml
           kubectl apply -f ./vivo-deployment.yaml
+          sleep 5
         shell: bash
 
       - name: Check it is running ok
@@ -119,7 +120,7 @@ jobs:
         run: |
           echo "Waiting for deployment to complete..."
           until kubectl rollout status deployment calyptia-vivo; do
-            echo -n "."
+            kubectl get all
             sleep 2
           done
           echo
