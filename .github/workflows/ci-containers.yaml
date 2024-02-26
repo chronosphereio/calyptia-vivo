@@ -62,7 +62,7 @@ jobs:
           build-args: "vivo_base_path=/vivo"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           load: false
           target: production
