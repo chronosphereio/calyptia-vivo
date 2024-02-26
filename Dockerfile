@@ -27,7 +27,7 @@ RUN \
       find out -name '*.css' -print0 | xargs -0 sed "s@url(/@url($NEXT_PUBLIC_VIVO_BASE_PATH/@g" -i
 
 #########
-FROM golang:1.21 as service-builder
+FROM golang:1.22 as service-builder
 
 # Ensure we produce a static binary to prevent issues between this image and the production one
 ARG TARGETOS TARGETARCH
@@ -43,7 +43,7 @@ COPY packages/service .
 RUN go build -o vivo-service -trimpath -tags netgo,osusergo .
 
 ######## Fluent Bit
-FROM fluent/fluent-bit:2.1.10 as production
+FROM fluent/fluent-bit:2.2.2 as production
 ARG vivo_base_path
 
 ### Set working directory

@@ -7,13 +7,13 @@ on:
     branches:
       - master
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*'
   pull_request:
     branches:
       - master
 
 jobs:
-  build-container-images: 
+  build-container-images:
     outputs:
       digest: ${{ steps.outputs.outputs.digest }}
     permissions:
@@ -89,14 +89,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.8.0
+        uses: helm/kind-action@v1.9.0
         with:
           cluster_name: kind
           config: ./kind/config.yaml
 
       - name: Apply local service using image from this run
         run: |
-          sed -i 's|image: calyptia/vivo|image: ghcr.io/calyptia/vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
+          sed -i 's|image: calyptia/vivo|image: ghcr.io/chronosphereio/calyptia-vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
           cat ./vivo-deployment.yaml
           kubectl apply -f ./vivo-deployment.yaml
         shell: bash
@@ -161,7 +161,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
       - name: Get Docker tags
         id: docker_meta
         uses: docker/metadata-action@v5
@@ -192,7 +192,7 @@ jobs:
       - name: Sign Container Image
         continue-on-error: true
         run: |
-          cosign sign --force --yes calyptia/vivo@${{ steps.docker_build.outputs.digest }}
+          cosign sign --recursive --yes calyptia/vivo@${{ steps.docker_build.outputs.digest }}
         shell: bash
 
   release-on-tag:
@@ -203,6 +203,7 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - name: Release on tag
         uses: softprops/action-gh-release@v1
         with:
