@@ -94,6 +94,19 @@ jobs:
           cluster_name: kind
           config: ./kind/config.yaml
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load local images into cluster
+        run: |
+          docker pull ghcr.io/chronosphereio/calyptia-vivo@${{ needs.build-container-images.outputs.digest }}
+          kind load docker-image ghcr.io/chronosphereio/calyptia-vivo@${{ needs.build-container-images.outputs.digest }}
+        shell: bash
+
       - name: Apply local service using image from this run
         run: |
           sed -i 's|image: calyptia/vivo|image: ghcr.io/chronosphereio/calyptia-vivo@${{ needs.build-container-images.outputs.digest }}|g' ./vivo-deployment.yaml
