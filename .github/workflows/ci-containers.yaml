@@ -139,6 +139,7 @@ jobs:
         run: |
           kubectl cluster-info || true
           kubectl get all || true
+          kubectl describe pod  --selector=app.kubernetes.io/name=vivo || true
           kubectl get events || true
           kubectl get pods --all-namespaces -o wide --show-labels || true
           kubectl logs "$(kubectl get pod --selector=app.kubernetes.io/name=vivo --output=jsonpath={.items..metadata.name})" || true
