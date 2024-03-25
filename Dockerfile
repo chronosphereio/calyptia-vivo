@@ -43,7 +43,7 @@ COPY packages/service .
 RUN go build -o vivo-service -trimpath -tags netgo,osusergo .
 
 ######## Fluent Bit
-FROM fluent/fluent-bit:2.2.2 as production
+FROM fluent/fluent-bit:3.0.0 as production
 ARG vivo_base_path
 
 ### Set working directory
