@@ -1,7 +1,7 @@
 ARG vivo_base_path="/vivo"
 
 #########
-FROM node:18-alpine as frontend-builder
+FROM node:22-alpine as frontend-builder
 ARG vivo_base_path
 
 # Set the working directory to /app inside the container
